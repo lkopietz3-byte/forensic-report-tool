@@ -1,0 +1,26 @@
+name: CI
+
+# The release gate, automated. Keep it boring: typecheck, the non-negotiable
+# test suites (grounding/audit/disclosure/rule26/honesty), and a real build.
+# Doc-only commits skip CI so they don't burn minutes.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "LICENSE", ".gitignore", "docs/**"]
+  pull_request:
+    paths-ignore: ["**.md", "LICENSE", ".gitignore", "docs/**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test
+      # build catches `.js`-vs-extensionless import regressions typecheck misses.
+      - run: npm run build

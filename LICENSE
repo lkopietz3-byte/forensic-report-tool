@@ -1,0 +1,27 @@
+Copyright (c) 2026 Lucas Kopietz. All rights reserved.
+
+Disclosed. — proprietary software.
+
+This repository and the Disclosed. application — including its drafting engine,
+its closed-world grounding contract, and its tamper-evident AI-disclosure record
+— are proprietary works of the copyright holder. They are published here for
+reading and evaluation purposes only.
+
+No license is granted to copy, modify, distribute, sell, sublicense, or use this
+software or its components, in whole or in part, for any purpose, commercial or
+non-commercial, without prior written permission from the copyright holder.
+
+Without limiting the foregoing, the following are expressly prohibited:
+
+  1. Automated or bulk extraction, scraping, or harvesting of the application,
+     its source, or its content by any means.
+
+  2. Using the source, its prompts, its grounding/disclosure logic, or its
+     structure — in whole or in part — to train, fine-tune, evaluate, or seed
+     any machine-learning model or any competing product or service.
+
+The absence of a technical barrier does not grant permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.

@@ -1,0 +1,77 @@
+{
+  "format": "disclosed.ai-disclosure-manifest",
+  "version": 1,
+  "algorithm": {
+    "hash": "SHA-256",
+    "canonicalization": "Recursive key-sorted JSON over each event with its entryHash field removed, UTF-8 encoded.",
+    "chain": "entryHash = SHA-256(canonicalJSON(event without entryHash)). The first event's prevHash is 64 zeros; each later prevHash equals the previous event's entryHash."
+  },
+  "report": {
+    "matter": "Alvarez v. Brightline (sample)",
+    "generatedAt": "2026-06-18T17:14:00.000Z"
+  },
+  "events": [
+    {
+      "id": "evt_sample_1",
+      "reportId": "sample-alvarez-brightline",
+      "sectionKey": "scope_of_assignment",
+      "prompt": "Structure the scope of assignment from the engagement letter [[E:e1]].",
+      "model": "claude-sonnet-4-5",
+      "modelVersion": "claude-sonnet-4-5-20250929",
+      "inputIds": [
+        "e1"
+      ],
+      "output": "Counsel retained the expert to evaluate the plaintiff's post-injury earning capacity and vocational options [[E:e1]].",
+      "createdAt": "2026-06-18T17:10:00.000Z",
+      "prevHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "entryHash": "a3be90a008b88f3eab71bdb5d4dad736a9007b52c339d00e6426a49d47f9ede5"
+    },
+    {
+      "id": "evt_sample_2",
+      "reportId": "sample-alvarez-brightline",
+      "sectionKey": "facts_and_data_considered",
+      "prompt": "Structure the facts considered from the records reviewed [[E:e2]] [[E:e3]].",
+      "model": "claude-sonnet-4-5",
+      "modelVersion": "claude-sonnet-4-5-20250929",
+      "inputIds": [
+        "e2",
+        "e3"
+      ],
+      "output": "The expert reviewed the functional capacity evaluation [[E:e2]] and the plaintiff's pre-injury earnings records [[E:e3]].",
+      "createdAt": "2026-06-18T17:11:00.000Z",
+      "prevHash": "a3be90a008b88f3eab71bdb5d4dad736a9007b52c339d00e6426a49d47f9ede5",
+      "entryHash": "650c71825988398497d838f698ba81e102325ba912b27997db882e4024958675"
+    },
+    {
+      "id": "evt_sample_3",
+      "reportId": "sample-alvarez-brightline",
+      "sectionKey": "opinions",
+      "prompt": "Structure the opinions from the vocational evaluation and labor-market survey [[E:e4]].",
+      "model": "claude-sonnet-4-5",
+      "modelVersion": "claude-sonnet-4-5-20250929",
+      "inputIds": [
+        "e4"
+      ],
+      "output": "Within the assessed restrictions, the plaintiff retains capacity for sedentary occupations identified in the labor-market survey [[E:e4]].",
+      "createdAt": "2026-06-18T17:12:00.000Z",
+      "prevHash": "650c71825988398497d838f698ba81e102325ba912b27997db882e4024958675",
+      "entryHash": "e2bde22b0bdc8005136c89fa05e47e91e2e4385afad6d2779f1174b0be8c4c9e"
+    },
+    {
+      "id": "evt_sample_4",
+      "reportId": "sample-alvarez-brightline",
+      "sectionKey": "bases_and_reasons",
+      "prompt": "Structure the bases and reasons from the evaluation methodology [[E:e4]] [[E:e2]].",
+      "model": "claude-sonnet-4-5",
+      "modelVersion": "claude-sonnet-4-5-20250929",
+      "inputIds": [
+        "e4",
+        "e2"
+      ],
+      "output": "These opinions rest on the documented functional restrictions [[E:e2]] applied to the surveyed local labor market [[E:e4]].",
+      "createdAt": "2026-06-18T17:13:00.000Z",
+      "prevHash": "e2bde22b0bdc8005136c89fa05e47e91e2e4385afad6d2779f1174b0be8c4c9e",
+      "entryHash": "04c1bc53d8d62fb543a3d904b31ebc23c4036878d2c0a9cb328a32a315423ba0"
+    }
+  ]
+}
