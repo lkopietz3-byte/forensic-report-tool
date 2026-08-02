@@ -27,11 +27,3 @@ next-env.d.ts
 .data/
 .vercel
 .env*
-.turbo/
-.env.*
-!.env.example
-!.env.sample
-.venv/
-__pycache__/
-playwright-report/
-test-results/
