@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/billing/stripe";
 import { toSubscriptionRow, type StripeSubLike } from "@/lib/billing/stripeMap";
 import { grantCredits } from "@/lib/billing/credits";
+import { creditGrantForSession } from "@/lib/billing/creditLedger";
 import { readBoundedText } from "@/lib/http/request";
 
 export const runtime = "nodejs";
@@ -77,14 +78,13 @@ export async function POST(request: Request) {
         if (!userId) break;
 
         if (session.mode === "payment") {
-          // Only grant on a genuinely PAID session — checkout.session.completed
-          // also fires for unpaid / delayed-payment sessions, which must never
-          // grant credits (a free-credit leak).
-          if (session.payment_status !== "paid") break;
-          // One-time credit purchase. Grant the amount we stamped in metadata,
-          // idempotent on the session id (uniq_credit_session).
-          const credits = Number(session.metadata?.credits ?? "0");
-          if (Number.isFinite(credits) && credits > 0) {
+          // One-time credit purchase. creditGrantForSession is the money-safety
+          // guard: it returns > 0 ONLY for a genuinely PAID session with a valid
+          // credit count, so an unpaid or delayed-payment checkout.session.completed
+          // grants nothing (the free-credit leak). Idempotent on the session id
+          // (uniq_credit_session), so a webhook replay is a no-op.
+          const credits = creditGrantForSession(session);
+          if (credits > 0) {
             await grantCredits(userId, credits, session.id);
           }
         } else {

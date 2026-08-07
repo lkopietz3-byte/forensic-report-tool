@@ -1,8 +1,13 @@
 import "server-only";
 import { createServiceClient } from "../supabase/server";
 import { supabaseServiceConfigured } from "../supabase/config";
-import { balanceFromRows } from "./creditLedger";
+import { balanceFromRows, normalizeSpendResult } from "./creditLedger";
+import type { SpendResult } from "./creditLedger";
 import { log } from "../log/logger";
+
+// SpendResult + its RPC-result mapping live in the pure ledger module (so they
+// unit-test without this server-only file); re-export the type for call sites.
+export type { SpendResult };
 
 // Server-side credit operations. All writes use the service client (RLS bypass)
 // because grants/debits are trusted server actions, never user-initiated inserts
@@ -55,15 +60,6 @@ export async function grantCredits(
 }
 
 /**
- * Outcome of a credit spend. `debited` = a credit was actually taken this call;
- * `already_paid` = this exact report content was paid for on a prior call (an
- * idempotent Word-then-PDF re-export), so nothing was debited; `insufficient` =
- * out of credits; `unavailable` = the ledger couldn't be reached. Only a
- * `debited` result may be refunded on a later render failure.
- */
-export type SpendResult = "debited" | "already_paid" | "insufficient" | "unavailable";
-
-/**
  * Atomically spend one credit (check balance > 0 and debit in a single,
  * per-user-serialized DB operation — see migrations 0007/0009/0010). A credit
  * covers a REPORT, not a download: pass the report-content fingerprint and a
@@ -80,9 +76,7 @@ export async function spendCredit(userId: string, fingerprint?: string): Promise
     log.error("credits.spend_failed", { err: error.message });
     return "unavailable";
   }
-  return data === "debited" || data === "already_paid" || data === "insufficient"
-    ? data
-    : "unavailable";
+  return normalizeSpendResult(data);
 }
 
 /**

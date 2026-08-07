@@ -55,7 +55,7 @@ const StyleSchema = z
     lineSpacing: z.enum(["single", "onehalf", "double"]).optional(),
     headingNumbering: z.enum(["decimal", "roman", "none"]).optional(),
     includeCoverPage: z.boolean().optional(),
-    footerText: z.string().trim().max(120).optional(),
+    footerText: z.string().trim().max(120).transform(stripControl).optional(),
     // Restrict to date-plausible characters (letters, digits, spaces, and , . / -)
     // so injection-shaped payloads (javascript:, SQL, angle brackets) are rejected
     // at the boundary rather than passed to the exporter's cover page. A character
@@ -83,16 +83,16 @@ const StyleSchema = z
 
 export const reportInputSchema = z.object({
   meta: z.object({
-    matter: z.string().trim().min(1).max(200),
-    retainingCounsel: z.string().trim().max(200).default(""),
-    expertRole: z.string().trim().max(200).default(""),
+    matter: z.string().trim().min(1).max(200).transform(stripControl),
+    retainingCounsel: z.string().trim().max(200).transform(stripControl).default(""),
+    expertRole: z.string().trim().max(200).transform(stripControl).default(""),
   }),
   profile: z.object({
-    fullName: z.string().trim().min(1).max(160),
-    credentials: z.string().trim().max(400).default(""),
-    publicationsLast10yr: z.array(z.string().trim().max(400)).max(50).default([]),
-    priorTestimonyLast4yr: z.array(z.string().trim().max(400)).max(100).default([]),
-    compensationStatement: z.string().trim().max(1_000).default(""),
+    fullName: z.string().trim().min(1).max(160).transform(stripControl),
+    credentials: z.string().trim().max(400).transform(stripControl).default(""),
+    publicationsLast10yr: z.array(z.string().trim().max(400).transform(stripControl)).max(50).default([]),
+    priorTestimonyLast4yr: z.array(z.string().trim().max(400).transform(stripControl)).max(100).default([]),
+    compensationStatement: z.string().trim().max(1_000).transform(stripControl).default(""),
   }),
   evidence: z.array(EvidenceSchema).max(MAX_UNITS),
   sections: z.array(SectionSchema).min(1).max(30),

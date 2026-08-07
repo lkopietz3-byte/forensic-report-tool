@@ -33,6 +33,51 @@ export function balanceFromRows(rows: { delta: number }[]): number {
 }
 
 /**
+ * MONEY-SAFETY guard for a Stripe `checkout.session.completed` event: how many
+ * credits (if any) it should grant. Returns 0 — grant NOTHING — unless the session
+ * is a one-time PAYMENT that actually settled (`payment_status === "paid"`) and
+ * carries a positive, finite credit count in its metadata. This closes the
+ * free-credit leak where `checkout.session.completed` also fires for unpaid or
+ * delayed-payment sessions, ignores subscription sessions (Pro is mirrored
+ * separately), and rejects missing or garbage metadata. Pure, so it unit-tests
+ * without Stripe.
+ */
+export function creditGrantForSession(session: {
+  mode?: string | null;
+  payment_status?: string | null;
+  metadata?: Record<string, string> | null;
+}): number {
+  if (session.mode !== "payment") return 0;
+  if (session.payment_status !== "paid") return 0;
+  const credits = Number(session.metadata?.credits ?? "0");
+  if (!Number.isFinite(credits) || credits <= 0) return 0;
+  return credits;
+}
+
+/**
+ * Outcome of a credit spend. `debited` = a credit was taken this call;
+ * `already_paid` = this report content was already paid for (an idempotent
+ * Word-then-PDF re-export), nothing debited; `insufficient` = out of credits;
+ * `unavailable` = the ledger couldn't be reached OR returned an unexpected shape.
+ * Only a `debited` result may be refunded on a later render failure.
+ */
+export type SpendResult = "debited" | "already_paid" | "insufficient" | "unavailable";
+
+/**
+ * Map the `spend_credit` RPC's raw return into a SpendResult. Per migration 0013
+ * the function returns text ('debited' | 'already_paid' | 'insufficient'). Anything
+ * else — a BOOLEAN (if 0013 was skipped and the old boolean-returning function is
+ * still live in prod), null, or an unexpected value — becomes "unavailable", so the
+ * caller fails CLOSED (no credit spent, a 503) rather than mistaking a truthy
+ * boolean for a successful debit and shipping a paid deliverable for free.
+ */
+export function normalizeSpendResult(data: unknown): SpendResult {
+  return data === "debited" || data === "already_paid" || data === "insufficient"
+    ? data
+    : "unavailable";
+}
+
+/**
  * Stable content fingerprint for a report, so the "one report = one charge" rule
  * holds: the credit spend is keyed to this hash, which covers ONLY the report's
  * content — meta, profile, evidence, and sections. Format (Word vs PDF), style,

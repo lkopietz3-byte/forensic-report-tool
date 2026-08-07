@@ -706,3 +706,63 @@ describe("profile — array sub-field bounds", () => {
 // GAP — the schema does NOT enforce unique evidence IDs or unique section
 // keys. That invariant lives only in the route handler, so a consumer of
 // parseReportInput (outside the route) would not catch duplicates.
+
+// ---------------------------------------------------------------------------
+// Control-character stripping — a NUL / C0 byte must never reach persistence.
+// Postgres text columns reject them and the whole save would hard-fail with a
+// generic error (and the hashed audit content would desync from what's stored).
+// A converted PDF, OCR'd exhibit, or a paste can carry them, so they are stripped
+// at the trust boundary from EVERY persisted free-text field.
+// ---------------------------------------------------------------------------
+
+describe("parseReportInput — strips C0 control bytes from every persisted free-text field", () => {
+  const NUL = "\u0000";
+  const hasControl = (s: string) => /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(s);
+
+  it("strips control bytes from meta, profile (incl. arrays), evidence, section, and footer text", () => {
+    const dirty = {
+      meta: {
+        matter: `Smith${NUL} v. Jones`,
+        retainingCounsel: `Hahn${NUL} LLP`,
+        expertRole: `Voc${NUL} expert`,
+      },
+      profile: {
+        fullName: `Dr.${NUL} Jane Expert`,
+        credentials: `CRC${NUL}; ABVE`,
+        publicationsLast10yr: [`Paper${NUL} one`],
+        priorTestimonyLast4yr: [`Reyes${NUL} v. Coastal (2024)`],
+        compensationStatement: `$295/hr${NUL} review`,
+      },
+      evidence: [{ id: "e1", content: `Injured${NUL} on 1 Jan.`, location: `Records${NUL} p.1` }],
+      sections: [{ key: "scope_of_assignment", finalText: `The scope${NUL} is defined [[E:e1]].` }],
+      style: { footerText: `Confidential${NUL}` },
+    };
+    const r = parseReportInput(dirty);
+    if (!r.success) throw new Error("expected success: " + JSON.stringify(r.error.issues));
+    const d = r.data;
+    expect(hasControl(d.meta.matter)).toBe(false);
+    expect(hasControl(d.meta.retainingCounsel)).toBe(false);
+    expect(hasControl(d.meta.expertRole)).toBe(false);
+    expect(hasControl(d.profile.fullName)).toBe(false);
+    expect(hasControl(d.profile.credentials)).toBe(false);
+    expect(hasControl(d.profile.publicationsLast10yr[0]!)).toBe(false);
+    expect(hasControl(d.profile.priorTestimonyLast4yr[0]!)).toBe(false);
+    expect(hasControl(d.profile.compensationStatement)).toBe(false);
+    expect(hasControl(d.evidence[0]!.content)).toBe(false);
+    expect(hasControl(d.evidence[0]!.location)).toBe(false);
+    expect(hasControl(d.sections[0]!.finalText!)).toBe(false);
+    expect(hasControl(d.style!.footerText!)).toBe(false);
+    // The visible text survives; only the control byte is gone.
+    expect(d.meta.matter).toBe("Smith v. Jones");
+    expect(d.evidence[0]!.content).toBe("Injured on 1 Jan.");
+  });
+
+  it("keeps tabs and newlines — only C0 controls are stripped", () => {
+    const r = parseReportInput({
+      ...minimalValid(),
+      profile: { fullName: "Dr. Jane", compensationStatement: "Line1\n\tLine2" },
+    });
+    if (!r.success) throw new Error("expected success");
+    expect(r.data.profile.compensationStatement).toBe("Line1\n\tLine2");
+  });
+});

@@ -183,6 +183,21 @@ export default function Article() {
             can&apos;t reconstruct what the tool was given and what it produced is
             exposed.
           </P>
+          <P>
+            This also answers a fair objection: aren&apos;t AI interactions
+            protected as work product? For a party&apos;s or lawyer&apos;s own
+            litigation preparation, sometimes yes. In mid-2026 the Texas Business
+            Court treated a party principal&apos;s ChatGPT conversations as work
+            product (<em>Tate Group Automotive v. Legacy Automotive Capital</em>),
+            and a New York court quashed subpoenas for a self-represented
+            litigant&apos;s AI prompts and outputs (<em>Assini v. Hayward</em>). But
+            a testifying expert&apos;s report sits in a different posture. Rule
+            26(a)(2)(B) calls for the facts and data the expert considered and the
+            basis for each opinion, and an expert&apos;s methodology has long been
+            open on cross. The protection a party may claim for its own AI-assisted
+            preparation does not extend to the methodology behind an expert&apos;s
+            opinion, which is why this exposure lands hardest on experts.
+          </P>
 
           <H2>Why this fits Rule 26 and Rule 702</H2>
           <P>
@@ -269,6 +284,8 @@ export default function Article() {
             <li>Matter of Weber, 85 Misc. 3d 727 (N.Y. Sur. Ct. 2024).</li>
             <li>Ferlito v. Harbor Freight Tools USA, Inc., No. 20-CV-5615, 2025 WL 1181699 (E.D.N.Y. Apr. 23, 2025).</li>
             <li>Conservation Law Foundation v. Shell Oil Co., No. 3:21-cv-00933 (D. Conn.) (magistrate order on AI prompts, under Rule 72(a) review).</li>
+            <li>Tate Group Automotive, LLC v. Legacy Automotive Capital, LLC (Tex. Bus. Ct., 11th Div. June 3, 2026) (a party principal&apos;s AI chats held work product).</li>
+            <li>Assini v. Hayward (N.Y. Sup. Ct., Nassau Cnty. June 4, 2026) (subpoena for a self-represented litigant&apos;s AI prompts quashed).</li>
             <li>Fed. R. Civ. P. 26(a)(2)(B); Fed. R. Evid. 702 (as amended Dec. 1, 2023).</li>
           </ul>
 

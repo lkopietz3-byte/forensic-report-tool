@@ -17,6 +17,8 @@ import {
   isCreditPlan,
   PLAN_CREDITS,
   reportFingerprint,
+  creditGrantForSession,
+  normalizeSpendResult,
 } from "@/lib/billing/creditLedger";
 import { deriveTier } from "@/lib/billing/featureGates";
 
@@ -276,5 +278,65 @@ describe("reportFingerprint — content-keyed, format/style-independent", () => 
   it("DOES change when profile changes", () => {
     const edited = { ...base, profile: { ...base.profile, fullName: "Someone Else" } };
     expect(reportFingerprint(edited)).not.toBe(reportFingerprint(base));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Webhook credit-grant guard — the free-credit leak (pure)
+// ---------------------------------------------------------------------------
+
+describe("creditGrantForSession — grants ONLY on a genuinely paid one-time purchase", () => {
+  const paid = { mode: "payment", payment_status: "paid", metadata: { credits: "5" } };
+
+  it("grants the metadata credit count on a paid payment session", () => {
+    expect(creditGrantForSession(paid)).toBe(5);
+  });
+
+  it("grants NOTHING when payment_status is not 'paid' (unpaid/delayed session — the leak)", () => {
+    expect(creditGrantForSession({ ...paid, payment_status: "unpaid" })).toBe(0);
+    expect(creditGrantForSession({ ...paid, payment_status: "no_payment_required" })).toBe(0);
+    expect(creditGrantForSession({ ...paid, payment_status: null })).toBe(0);
+    // payment_status absent entirely
+    expect(creditGrantForSession({ mode: "payment", metadata: { credits: "5" } })).toBe(0);
+  });
+
+  it("grants NOTHING for a subscription session (Pro is mirrored separately, not via credits)", () => {
+    expect(creditGrantForSession({ ...paid, mode: "subscription" })).toBe(0);
+    expect(creditGrantForSession({ ...paid, mode: null })).toBe(0);
+  });
+
+  it("grants NOTHING for missing, zero, negative, or non-numeric credit metadata", () => {
+    const ok = { mode: "payment", payment_status: "paid" } as const;
+    expect(creditGrantForSession({ ...ok, metadata: {} })).toBe(0);
+    expect(creditGrantForSession({ ...ok, metadata: null })).toBe(0);
+    expect(creditGrantForSession({ ...ok, metadata: { credits: "0" } })).toBe(0);
+    expect(creditGrantForSession({ ...ok, metadata: { credits: "-5" } })).toBe(0);
+    expect(creditGrantForSession({ ...ok, metadata: { credits: "abc" } })).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// spend_credit result mapping — fail CLOSED (the 0013 boolean→text deploy trap)
+// ---------------------------------------------------------------------------
+
+describe("normalizeSpendResult — an unexpected RPC shape fails CLOSED, never a free debit", () => {
+  it("passes through the three real text outcomes", () => {
+    expect(normalizeSpendResult("debited")).toBe("debited");
+    expect(normalizeSpendResult("already_paid")).toBe("already_paid");
+    expect(normalizeSpendResult("insufficient")).toBe("insufficient");
+  });
+
+  it("maps a BOOLEAN to 'unavailable' — if migration 0013 was skipped and the old boolean fn is live, a paid export must NOT slip through free", () => {
+    expect(normalizeSpendResult(true)).toBe("unavailable");
+    expect(normalizeSpendResult(false)).toBe("unavailable");
+  });
+
+  it("maps null/undefined/number/object/unknown or wrong-case string to 'unavailable'", () => {
+    expect(normalizeSpendResult(null)).toBe("unavailable");
+    expect(normalizeSpendResult(undefined)).toBe("unavailable");
+    expect(normalizeSpendResult(1)).toBe("unavailable");
+    expect(normalizeSpendResult({})).toBe("unavailable");
+    expect(normalizeSpendResult("DEBITED")).toBe("unavailable");
+    expect(normalizeSpendResult("ok")).toBe("unavailable");
   });
 });
