@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { requireTestDbInCI } from "./require-test-db";
 
 // Cross-user isolation: the single most important security test for a tool that
 // holds litigation-sensitive case files under protective order. It proves user
@@ -15,7 +16,12 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const URL = process.env.TEST_SUPABASE_URL;
 const SERVICE_KEY = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
 const ANON_KEY = process.env.TEST_SUPABASE_ANON_KEY;
-const hasTestDB = Boolean(URL && SERVICE_KEY && ANON_KEY);
+// Skips locally without a database; throws in CI rather than passing vacuously.
+const hasTestDB = requireTestDbInCI({
+  TEST_SUPABASE_URL: URL,
+  TEST_SUPABASE_SERVICE_ROLE_KEY: SERVICE_KEY,
+  TEST_SUPABASE_ANON_KEY: ANON_KEY,
+});
 
 // RLS denials return ZERO ROWS, not an error. So "no access" passes if EITHER
 // an error is raised OR the result set is empty. Treating only errors as a pass
