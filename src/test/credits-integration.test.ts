@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { requireTestDbInCI } from "./require-test-db";
 
 // Credit-ledger integrity against a REAL Postgres: proves the atomic spend RPC
 // (migration 0007) prevents the double-spend race, never goes negative, and that
@@ -11,7 +12,11 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const URL = process.env.TEST_SUPABASE_URL;
 const SERVICE_KEY = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
-const hasTestDB = Boolean(URL && SERVICE_KEY);
+// Skips locally without a database; throws in CI rather than passing vacuously.
+const hasTestDB = requireTestDbInCI({
+  TEST_SUPABASE_URL: URL,
+  TEST_SUPABASE_SERVICE_ROLE_KEY: SERVICE_KEY,
+});
 const suite = hasTestDB ? describe : describe.skip;
 
 async function balance(admin: SupabaseClient, userId: string): Promise<number> {
