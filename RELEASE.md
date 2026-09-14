@@ -44,7 +44,7 @@ npm test -- --maxWorkers=1 src/test/reportLoadRoute.test.ts src/test/savedReport
 npm test -- --maxWorkers=1 src/test/creditLedger.test.ts src/test/creditSafety.test.ts src/test/credits-integration.test.ts
 ```
 
-Run `npm run check` on a stable candidate. It performs genuine ESLint, typecheck, the complete
+Run `npm run check` on a stable candidate. It performs source custody, genuine ESLint, typecheck, runner guards, the complete
 ordinary test suite, and a production build. Record the exact revision and
 dirty state alongside the result; skipped external suites are not evidence that
 their boundaries passed.
@@ -222,6 +222,9 @@ included Actions capacity or explicit cost authorization before activation.
 
 Existing PR #1 documents missing database execution in hosted CI. The current
 loopback-only `npm run test:db` fails when explicitly required but unavailable;
-the ordinary hosted job still does not provision that database. The separately
-executed local database receipt is real evidence, not a substitute for hosted
-database reproduction. Keep PR #1 open until that hosted gap is resolved.
+the CI configuration now provisions a fresh required database gate using the
+checksum-pinned CLI and the local Docker socket. See
+[disposable database gate](docs/disposable-database-gate.md) for prerequisites,
+cleanup and receipt limitations. This configuration has not yet run on hosted
+Linux. The separately executed local receipt is real evidence, not a substitute
+for hosted reproduction. Keep PR #1 open until that hosted gap is resolved.

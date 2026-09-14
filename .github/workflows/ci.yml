@@ -19,10 +19,12 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
@@ -31,6 +33,49 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - run: npm run test:db-runner
       - run: npm run test
       # build catches `.js`-vs-extensionless import regressions typecheck misses.
       - run: npm run build
+      # Configuration is prepared; hosted Linux execution remains unverified.
+      - name: Install checksum-pinned Supabase test CLI
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          cli_dir="$RUNNER_TEMP/disclosed-test-cli"
+          mkdir "$cli_dir"
+          curl --proto '=https' --tlsv1.2 --fail --location --retry 3 \
+            --output "$cli_dir/supabase.tar.gz" \
+            'https://github.com/supabase/cli/releases/download/v2.117.0/supabase_2.117.0_linux_amd64.tar.gz'
+          printf '%s  %s\n' '69c05f85b9e47ee706d30f1a6ca8a526b4e337bfd12c7ef1ef522d24e7280d24' "$cli_dir/supabase.tar.gz" | sha256sum --check --strict
+          tar -xzf "$cli_dir/supabase.tar.gz" -C "$cli_dir" supabase supabase-go
+          printf '%s\n' "$cli_dir" >> "$GITHUB_PATH"
+      - name: Required disposable database gate
+        id: database
+        env:
+          DOCKER_HOST: unix:///var/run/docker.sock
+        run: npm run test:db:disposable -- "$RUNNER_TEMP/disclosed-db-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+      - name: Record database result without artifact storage
+        if: ${{ always() && steps.database.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="$RUNNER_TEMP/disclosed-db-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/receipt.json"
+          if [ ! -f "$receipt" ]; then
+            echo 'Disposable database evidence: UNAVAILABLE (no receipt).' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          node --input-type=module - "$receipt" <<'NODE'
+          import {readFileSync, appendFileSync} from 'node:fs';
+          const receipt = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+          // Only fixed result fields enter the summary; no raw service state or credentials.
+          const summary = {
+            result: receipt.result,
+            tests: receipt.tests,
+            cleanup: receipt.cleanup,
+          };
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            '### Disposable database evidence\n\n```json\n' + JSON.stringify(summary, null, 2) + '\n```\n');
+          if (receipt.result !== 'PASS' || receipt.cleanup !== 'PASS') process.exitCode = 1;
+          NODE

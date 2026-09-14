@@ -25,7 +25,9 @@ npm install
 npm run dev        # http://localhost:3000 (keyless preview works out of the box)
 npm run typecheck
 npm run test       # ordinary suite; database suites may be explicitly skipped
-npm run test:db    # required disposable Supabase gate; see RELEASE.md
+npm run test:db-runner # runner guards, including real Vitest env isolation
+npm run test:db:disposable -- /absolute/new-run # existing local Docker required
+npm run test:db    # manually configured required DB gate; see RELEASE.md
 npm run build
 ```
 

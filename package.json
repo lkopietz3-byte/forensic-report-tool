@@ -11,9 +11,11 @@
     "test": "vitest run",
     "test:db": "REQUIRE_SUPABASE_INTEGRATION=1 vitest run --maxWorkers=1 src/test/rls-isolation.test.ts src/test/credits-integration.test.ts src/test/reportDelete.integration.test.ts src/test/reportSave.integration.test.ts",
     "test:watch": "vitest",
-    "check": "npm run check:custody && npm run lint && npm run typecheck && npm run test && npm run build",
+    "check": "npm run check:custody && npm run lint && npm run typecheck && npm run test:db-runner && npm run test && npm run build",
     "lint": "eslint .",
-    "check:custody": "node scripts/check-source-custody.mjs"
+    "check:custody": "node scripts/check-source-custody.mjs",
+    "test:db-runner": "node --test scripts/disposable-db.test.mjs",
+    "test:db:disposable": "node scripts/disposable-db.mjs ."
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
