@@ -113,9 +113,10 @@ capture**. Before pointing **real, protective-order case files** at the
 authenticated builder, here's the status of the pre-real-data gate from
 `RELEASE.md`:
 
-**Now in place:**
-- RLS isolation (per-user policies on every table) **+ a cross-user isolation
-  test** (`src/test/rls-isolation.test.ts` — runs once `TEST_SUPABASE_*` are set).
+**Implemented in source; verify before treating as deployed:**
+- RLS isolation (per-user policies on every table) **+ cross-user isolation and
+  financial-boundary tests**. Run `npm run test:db` only against a loopback
+  Supabase migrated through `0016`; remote targets are refused. See `RELEASE.md`.
 - Server-side billing/feature enforcement (`checkServerAccess` + the credit gate,
   armed by `NEXT_PUBLIC_FF_BILLING`).
 - The append-only **persisted** audit chain, re-verified on read (hash columns in
@@ -129,8 +130,8 @@ authenticated builder, here's the status of the pre-real-data gate from
   `'unsafe-inline'`. Static marketing pages keep the inline-allowing CSP (they
   carry no user data; a per-request nonce can't be threaded into build-time HTML).
 
-**All items on the pre-real-data gate are now in place.** Remaining hardening is
-ramp-only (e.g. raising `Strict-Transport-Security` `max-age` once every subdomain
-is verified HTTPS, tightening `style-src`), not a blocker. Still keep the
-`/intake` demo framed as a preview where **nothing is stored** until you've run
-the live `docs/SETUP-checklist.md` verification on your own Supabase/Stripe.
+Source presence is not a passed pre-real-data gate. Record the disposable-DB
+result, the authorized production revision, and the rendered production checks,
+and obtain the external legal/confidentiality approvals in `RELEASE.md`. Keep
+the `/intake` demo framed as a preview where **nothing is stored** wherever that
+remains the actual behavior.

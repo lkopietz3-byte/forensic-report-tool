@@ -1,3 +1,4 @@
+import { SignOutButton } from "./SignOutButton";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { VOCREHAB_TEMPLATE } from "@/lib/domain/template";
@@ -91,14 +92,7 @@ export default async function Workspace({
                 <span className="hidden max-w-[12rem] truncate text-xs text-slate-500 sm:inline">
                   {user.email}
                 </span>
-                <form action="/auth/signout" method="post">
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                  >
-                    Sign out
-                  </button>
-                </form>
+                <SignOutButton />
               </div>
             ) : authConfigured ? (
               <Link

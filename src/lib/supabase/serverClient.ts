@@ -11,7 +11,9 @@ import { cookies } from "next/headers";
 // Returns null when Supabase isn't configured (keyless preview), so callers can
 // fall back to session-only mode instead of throwing.
 
-export async function createSupabaseServerClient() {
+export async function createSupabaseServerClient(
+  { requireCookieWrites = false }: { requireCookieWrites?: boolean } = {},
+) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
   if (!url || !anonKey) return null;
@@ -27,7 +29,8 @@ export async function createSupabaseServerClient() {
           for (const { name, value, options } of cookiesToSet) {
             cookieStore.set(name, value, options);
           }
-        } catch {
+        } catch (error) {
+          if (requireCookieWrites) throw error;
           // Called from a Server Component, where cookies are read-only. The
           // middleware (src/middleware.ts) refreshes the session cookie instead,
           // so this is safe to ignore.

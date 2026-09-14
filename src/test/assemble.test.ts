@@ -26,6 +26,13 @@ describe("assembleUserReport", () => {
     ],
   };
 
+  it("binds a supplied saved-report identifier into the report and audit chain", async()=>{
+    const id="10000000-0000-4000-8000-000000000001";
+    const report=await assembleUserReport(input,null,id);
+    expect(report.meta.id).toBe(id);expect(report.appendix.rawEvents.length).toBeGreaterThan(0);
+    expect(report.appendix.rawEvents.every(event=>event.reportId===id)).toBe(true);
+  });
+
   it("drafts the chosen sections in template order", async () => {
     const r = await assembleUserReport(input);
     expect(r.sections.map((s) => s.key)).toEqual([

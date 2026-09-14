@@ -13,21 +13,20 @@ export is free until you arm billing.)
 
 ---
 
-## Pre-flight (2 min) — the gate is already green
+## Pre-flight — establish current evidence
 
-Last run this session: **typecheck clean · 501 tests · prod build OK (32/32 pages).**
-A pre-deploy adversarial audit also hardened the existential grounding gate (colon /
-unbalanced-bracket laundering closed), renamed the duplicate `0010` credit-status
-migration to `0013` (now in the list below), tied export auth to the model boundary,
-and added an export staleness guard. Re-run if you touched anything since:
+Do not rely on a test count or result recorded in this document; it goes stale as soon
+as source changes. From the exact candidate revision, run the repository contract:
 
 ```
-export PATH="$HOME/.local/node/bin:$PATH"
-npm run typecheck && npm test && npm run build
+npm run check
 ```
 
-Also do the honesty pass (no "court-defensible/admissible/compliant/guaranteed" in any
-new copy). Then proceed.
+If the release enables saved real case data or billing, `npm run test:db` must also pass
+against a loopback Supabase migrated through `0016`; a skipped database suite is not
+a pass. See `RELEASE.md` for the required safety variables and evidence record. Also do
+the honesty pass (no "court-defensible/admissible/compliant/guaranteed" in new copy).
+Do not deploy while the current audit or any required gate remains open.
 
 ---
 
@@ -37,14 +36,18 @@ In prod **without** Supabase, `/for-experts` fails closed and applications are l
 Wire it first.
 
 - [ ] Create a project at https://supabase.com.
-- [ ] **SQL Editor** → run the 14 migrations **in order** (paste each, run, next):
+- [ ] **SQL Editor** → run the 16 migrations **in order** (paste each, run, next):
       `0001_init` · `0002_waitlist` · `0003_waitlist_design_partner` ·
       `0004_persistence_and_billing` · `0005_credits` · `0006_stripe_events` ·
       `0007_spend_credit` · `0008_perf_indexes` · `0009_spend_credit_fingerprint` ·
       `0010_report_deliverable_style` · `0011_feedback` · `0012_templates_rls` ·
       `0013_spend_credit_status` (**required before billing** — else credit exports 503) ·
       `0014_lock_public_capture_tables` (**required before launch** — removes direct
-      anon writes that bypass API validation, honeypots, and rate limits)
+      anon writes that bypass API validation, honeypots, and rate limits) ·
+      `0015_delete_saved_report` (**required before saved-report deletion** — owner-scoped
+      atomic deletion; refuses a case shared with another report) ·
+      `0016_save_report_snapshot` (**required before saving reports** — atomic graph,
+      report-owned profile, and report-bound audit identity)
       (files in `supabase/migrations/`).
 - [ ] **Authentication → Providers → Email**: enable (magic link / OTP). *(Needed for
       sign-in + saved reports. The public site + application don't require a login, but
@@ -74,7 +77,7 @@ Wire it first.
 - [ ] `/sample` renders; **Download PDF** and **Word (.docx)** both produce files.
 - [ ] `/workspace`: load the worked example → **Build & preview** → grounding is clean,
       the AI-Disclosure record shows → **Download Word**.
-- [ ] `/for-experts`: submit a **real** application → row appears in Supabase `waitlist`
+- [ ] `/for-experts`: submit a designated **synthetic smoke-test** application → row appears in Supabase `waitlist`
       (`source` starts with `for-experts`; discipline-preview entries include the
       discipline in the source). Submit a **blank/one-word** one → refused (422),
       not stored. Also verify that a prior lightweight signup with the same email
@@ -109,10 +112,10 @@ enforce. Leave it unset and export stays free. *(SETUP-checklist §3.)*
 
 ## Before you point REAL, protective-order case files at the builder
 
-Per `DEPLOY.md`, every pre-real-data security item is **already in place** (RLS +
-isolation test, persisted hash-chained audit re-verified on read, CSP per-request nonce
-on the case-data routes, Stripe webhook idempotency). Two things to actually do first:
-run the isolation test against your live DB (set `TEST_SUPABASE_*`, `npm test` →
-`rls-isolation.test.ts` runs), and keep the `/intake` demo framed as "nothing is
-stored." Remaining hardening (HSTS `includeSubDomains`/`preload`, tighter `style-src`)
-is ramp-only, not a blocker.
+Do not infer this readiness from source or ordinary tests. First pass `npm run test:db`
+against a disposable migration-`0016` database; never aim that destructive integration
+suite at the live project. Then verify the authorized production revision and its
+synthetic account/load/retry paths without real case material. Qualified counsel must
+separately approve the customer terms, confidentiality/data-processing posture, and
+exact in-product legal claims before protective-order or privileged material is
+accepted. Keep `/intake` framed honestly as session-only wherever that remains true.

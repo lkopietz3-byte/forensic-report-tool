@@ -40,7 +40,7 @@ export default function Resources() {
         </h1>
         <p className="mt-3 max-w-2xl text-pretty text-lg leading-relaxed text-slate-600">
           Practical, plain-English guidance for forensic experts and the lawyers
-          who retain them. It's written to be accurate and useful, not to sell
+          who retain them. It&apos;s written to be accurate and useful, not to sell
           you anything.
         </p>
 

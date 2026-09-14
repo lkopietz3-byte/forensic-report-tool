@@ -14,17 +14,27 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   const next = safeInternalPath(url.searchParams.get("next"));
 
-  if (code) {
-    const supabase = await createSupabaseServerClient();
-    if (supabase) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (!error) {
-        return NextResponse.redirect(new URL(next, url.origin));
+  try {
+    if (code) {
+      const supabase = await createSupabaseServerClient({ requireCookieWrites: true });
+      if (supabase) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          // A relative Location preserves the browser origin when Next uses an
+          // internal hostname behind a proxy (including the local dev server).
+          return new NextResponse(null, { status: 307, headers: { Location: next } });
+        }
       }
     }
+  } catch {
+    return NextResponse.json({ error: "Sign-in could not be completed. Please try signing in again." }, {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
   }
 
-  return NextResponse.redirect(
-    new URL("/signin?error=link", url.origin),
-  );
+  return new NextResponse(null, {
+    status: 307,
+    headers: { Location: "/signin?error=link" },
+  });
 }

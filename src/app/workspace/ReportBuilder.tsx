@@ -6,24 +6,20 @@ import { ChallengeChecklist, type SectionGuide } from "./ChallengeChecklist";
 import { SourcesPanel } from "./SourcesPanel";
 import { readDocumentFile } from "../intake/readDocumentFile";
 import { DeliverableOptions } from "./DeliverableOptions";
-import { DEFAULT_STYLE, normalizeStyle, type DeliverableStyle } from "@/lib/export/style";
+import { DEFAULT_STYLE, type DeliverableStyle } from "@/lib/export/style";
 import { reportFilename } from "@/lib/export/filename";
 import { FIELD, BTN_PRIMARY } from "./ui";
 import { InfoTip } from "./InfoTip";
 import { LiveGrounding } from "./LiveGrounding";
+import { SavedReportsPanel, type SavedReportSummary } from "./SavedReportsPanel";
+import { useSavedReports } from "./useSavedReports";
+import { materializeSavedReport } from "./savedReportLoad";
 import { buildManifest } from "@/lib/domain/verifyManifest";
 import type { AuditEvent } from "@/lib/domain/types";
 
 interface EvidenceSection {
   key: string;
   title: string;
-}
-
-interface SavedReport {
-  id: string;
-  matter: string;
-  createdAt: string;
-  status: string;
 }
 
 interface Unit {
@@ -269,7 +265,9 @@ export function ReportBuilder({
   }, [currentFingerprint]);
 
   // Persistence (only when signed in)
-  const [savedReports, setSavedReports] = useState<SavedReport[]>([]);
+  const { reports: savedReports, setReports: setSavedReports, status: savedListStatus, refresh: refreshSaved } = useSavedReports(canSave, apiFetch);
+  const [loadingReportId, setLoadingReportId] = useState<string | null>(null);
+  const [failedLoadId, setFailedLoadId] = useState<string | null>(null);
   const [saveMsg, setSaveMsg] = useState<string | null>(
     justUpgraded
       ? "Your membership is active. Thanks! Word and PDF export are now open to you."
@@ -277,22 +275,6 @@ export function ReportBuilder({
         ? `Added ${justPurchased} report credit${justPurchased === 1 ? "" : "s"} to your account.`
         : null,
   );
-
-  const refreshSaved = useCallback(async () => {
-    if (!canSave) return;
-    try {
-      const res = await apiFetch("/api/report/list", {}, 30_000);
-      if (!res.ok) return;
-      const data: { reports: SavedReport[] } = await res.json();
-      setSavedReports(data.reports);
-    } catch {
-      /* non-fatal */
-    }
-  }, [canSave]);
-
-  useEffect(() => {
-    void refreshSaved();
-  }, [refreshSaved]);
 
   // Arrived from a homepage pricing CTA (/workspace?buy=...): if the visitor is
   // signed in and billing is live, take them straight to that checkout; if not
@@ -815,7 +797,17 @@ export function ReportBuilder({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Could not save.");
+      const acknowledgement = await res.json().catch(() => null);
+      if ([400,401,403,413,429].includes(res.status)) {
+        setError(`${acknowledgement?.error ?? "The save request was refused."} Nothing was saved by this request. Your workspace was not changed.`);
+        return;
+      }
+      if (res.status !== 200 || !acknowledgement ||
+          typeof acknowledgement.reportId !== "string" || typeof acknowledgement.caseId !== "string" ||
+          !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(acknowledgement.reportId ?? "") ||
+          !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(acknowledgement.caseId ?? "")) {
+        throw new Error(acknowledgement?.error ?? "Saving could not be confirmed.");
+      }
       setSaveMsg(
         hadImages
           ? "Saved to your account. Attached figures stay in this session and embed when you export. They aren't stored yet, so re-attach them next time you open this report."
@@ -823,7 +815,7 @@ export function ReportBuilder({
       );
       await refreshSaved();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setError(`${e instanceof Error ? e.message : "Saving could not be confirmed."} Your workspace was not changed. The save may have succeeded; refresh saved reports before trying again. Another save creates a new snapshot.`);
     } finally {
       setBusy(null);
     }
@@ -831,66 +823,50 @@ export function ReportBuilder({
 
   async function loadReport(id: string) {
     setBusy("load");
+    setLoadingReportId(id);
+    setFailedLoadId(null);
     setError(null);
     setSaveMsg(null);
     try {
       const res = await apiFetch(`/api/report/${id}`, {}, 30_000);
       if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Could not open that report.");
-      const data: {
-        input: {
-          meta: { matter: string; retainingCounsel: string; expertRole: string };
-          profile: {
-            fullName: string; credentials: string; compensationStatement: string;
-            priorTestimonyLast4yr: string[];
-          };
-          evidence: { id: string; content: string; location: string }[];
-          sections: { key: string; evidenceIds: string[]; finalText?: string }[];
-          style?: Partial<DeliverableStyle> | null;
-        };
-        integrity: { verified: boolean };
-      } = await res.json();
+      const next = materializeSavedReport(
+        await res.json(),
+        evidenceSections[0]?.key ?? "",
+        id,
+      );
 
-      const { input } = data;
-      setMatter(input.meta.matter);
-      setRetainingCounsel(input.meta.retainingCounsel);
-      setExpertRole(input.meta.expertRole);
-      setFullName(input.profile.fullName);
-      setCredentials(input.profile.credentials);
-      setCompensationStatement(input.profile.compensationStatement);
-      setPriorTestimony((input.profile.priorTestimonyLast4yr ?? []).join("\n"));
-
-      const sectionByEvidence = new Map<string, string>();
-      for (const s of input.sections) for (const eid of s.evidenceIds) sectionByEvidence.set(eid, s.key);
-      const restoredEdits: Record<string, string> = {};
-      for (const s of input.sections) if (s.finalText?.trim()) restoredEdits[s.key] = s.finalText;
-      setEdits(restoredEdits);
+      setMatter(next.matter);
+      setRetainingCounsel(next.retainingCounsel);
+      setExpertRole(next.expertRole);
+      setFullName(next.fullName);
+      setCredentials(next.credentials);
+      setCompensationStatement(next.compensationStatement);
+      setPriorTestimony(next.priorTestimony);
+      setEdits(next.edits);
       setEditingKey(null);
       // Restore the saved formatting choices (font, spacing, appendix toggles)
       // rather than silently resetting them to defaults on reopen.
-      setStyle(normalizeStyle(input.style));
-      setUnits(
-        input.evidence.map((u) => ({
-          id: u.id,
-          content: u.content,
-          location: u.location,
-          sectionKey: sectionByEvidence.get(u.id) ?? evidenceSections[0]?.key ?? "",
-        })),
-      );
+      setStyle(next.style);
+      setUnits(next.units);
       setShowEvidenceItems(true);
       setPreview(null);
-      setSaveMsg(
-        data.integrity.verified
-          ? "Opened. Disclosure chain verified."
-          : "Opened. Note: the saved disclosure chain failed verification.",
-      );
+      setSaveMsg([
+        next.integrityVerified ? "Opened. Disclosure chain verified." : "Opened. Note: the saved disclosure chain failed verification.",
+        next.profileSource === "legacy_current_profile" ? "This older report uses your current saved profile; its original profile was not preserved." : "",
+        next.reportBound === false ? "The disclosure chain is not verified as bound to this report." : "",
+      ].filter(Boolean).join(" "));
+      setFailedLoadId(null);
     } catch (e) {
+      setFailedLoadId(id);
       setError(e instanceof Error ? e.message : "Something went wrong.");
     } finally {
+      setLoadingReportId(null);
       setBusy(null);
     }
   }
 
-  async function deleteReport(report: SavedReport) {
+  async function deleteReport(report: SavedReportSummary) {
     if (
       !window.confirm(
         `Permanently delete "${report.matter}" and its saved evidence, sections, and disclosure record? This cannot be undone.`,
@@ -903,15 +879,23 @@ export function ReportBuilder({
     setSaveMsg(null);
     try {
       const res = await apiFetch(`/api/report/${report.id}`, { method: "DELETE" }, 30_000);
-      if (!res.ok) {
+      if (res.status === 409) {
+        const conflict = await res.json().catch(() => ({}));
+        if (conflict.code === "REPORT_DELETE_SHARED_CASE") {
+          setError("This case contains multiple saved reports. Nothing was deleted. Shared-case deletion is not available here. Open Help to report this conflict without including case material. Your current workspace was not changed.");
+          return;
+        }
+      }
+      if (res.status !== 204) {
         throw new Error(
-          (await res.json().catch(() => ({}))).error ?? "Could not delete that report.",
+          (await res.json().catch(() => ({}))).error ?? "Deletion could not be confirmed. Refresh your saved reports before trying again.",
         );
       }
       setSavedReports((current) => current.filter((item) => item.id !== report.id));
+      if (failedLoadId === report.id) setFailedLoadId(null);
       setSaveMsg("Saved report deleted.");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setError(`${e instanceof Error ? e.message : "Deletion could not be confirmed."} Your current workspace was not changed. Use Refresh saved reports to check the latest list.`);
     } finally {
       setBusy(null);
     }
@@ -962,6 +946,7 @@ export function ReportBuilder({
     setUnits(WORKED_EXAMPLE.units.map((u) => ({ ...u })));
     setShowEvidenceItems(false);
     setPreview(null);
+    setFailedLoadId(null);
     setError(null);
     setSaveMsg("Loaded a worked example. Hit Build & preview, then download, or edit any field to make it yours.");
   }
@@ -979,6 +964,7 @@ export function ReportBuilder({
     setUnits([]);
     setShowEvidenceItems(true);
     setPreview(null);
+    setFailedLoadId(null);
     setError(null);
     setSaveMsg(null);
   }
@@ -1019,7 +1005,7 @@ export function ReportBuilder({
       </div>
 
       {error && (
-        <div className="rise-in rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</div>
+        <div className="rise-in rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">{error}</div>
       )}
       {saveMsg && !error && (
         <div className="rise-in rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{saveMsg}</div>
@@ -1074,39 +1060,17 @@ export function ReportBuilder({
       )}
 
       {/* Saved reports (signed-in only) */}
-      {canSave && savedReports.length > 0 && (
-        <section className="lift rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-slate-800">Your saved reports</h2>
-          <ul className="mt-3 divide-y divide-slate-100">
-            {savedReports.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 py-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-slate-800">{r.matter}</p>
-                  <p className="text-xs text-slate-500">
-                    {new Date(r.createdAt).toLocaleString()} · {r.status}
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    onClick={() => loadReport(r.id)}
-                    disabled={busy !== null}
-                    className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
-                  >
-                    {busy === "load" ? "Opening…" : "Open"}
-                  </button>
-                  <button
-                    onClick={() => deleteReport(r)}
-                    disabled={busy !== null}
-                    className="rounded-lg px-2 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
-                    aria-label={`Delete saved report ${r.matter}`}
-                  >
-                    {busy === "delete" ? "Deleting…" : "Delete"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+      {canSave && (
+        <SavedReportsPanel
+          reports={savedReports}
+          listStatus={savedListStatus}
+          onRefresh={() => void refreshSaved()}
+          busy={busy}
+          loadingReportId={loadingReportId}
+          failedLoadId={failedLoadId}
+          onOpen={(id) => void loadReport(id)}
+          onDelete={(report) => void deleteReport(report)}
+        />
       )}
 
       {/* 1. Matter + expert */}

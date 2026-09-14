@@ -113,6 +113,7 @@ async function mapWithConcurrency<T>(
 export async function assembleUserReport(
   input: AssembleInput,
   llm: LLMClient | null = null,
+  reportId: string = REPORT_ID,
 ): Promise<AssembledReport> {
   const audit = new AuditLog();
   // The pipeline keys on id/content/location; inputId is bookkeeping only.
@@ -168,7 +169,7 @@ export async function assembleUserReport(
       // Record BEFORE grounding post-processing, matching draftSection, so the
       // disclosure appendix reflects exactly what was fed and produced.
       audit.append({
-        reportId: REPORT_ID,
+        reportId: reportId,
         sectionKey: section.key,
         prompt: draft.prompt,
         model: draft.model,
@@ -223,13 +224,13 @@ export async function assembleUserReport(
     }
   }
 
-  const appendix = generateDisclosureAppendix(REPORT_ID, audit, evidence);
-  const reconstructions = reconstructAllOpinions(REPORT_ID, exportSections, audit, evidence);
+  const appendix = generateDisclosureAppendix(reportId, audit, evidence);
+  const reconstructions = reconstructAllOpinions(reportId, exportSections, audit, evidence);
   const rule26 = validateRule26(exportSections, VOCREHAB_TEMPLATE);
   const readiness = assessReadiness(rule26, reconstructions);
 
   const meta: ReportMeta = {
-    id: REPORT_ID,
+    id: reportId,
     caseId: "user-case",
     discipline: VOCREHAB_TEMPLATE.discipline,
     templateVersion: VOCREHAB_TEMPLATE.version,

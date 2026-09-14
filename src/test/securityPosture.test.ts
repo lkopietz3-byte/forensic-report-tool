@@ -67,16 +67,9 @@ describe("public capture-table lockdown migration", () => {
 });
 
 describe("saved-report deletion contract", () => {
-  it("uses same-origin + explicit owner checks and cascades through the case", async () => {
-    const route = await fs.readFile(
-      path.join(process.cwd(), "src", "app", "api", "report", "[id]", "route.ts"),
-      "utf8",
-    );
-    expect(route).toMatch(/export async function DELETE/);
-    expect(route).toMatch(/isSameOriginRequest\(request\)/);
-    expect(route).toMatch(/owner_id !== user\.id/);
-    expect(route).toMatch(/from\("cases"\)[\s\S]*\.delete\(\)/);
-  });
+  // Ownership, actual row effects, and cascade behavior are exercised by
+  // reportDeleteRoute.test.ts and reportDelete.integration.test.ts. Source
+  // pattern checks cannot establish those guarantees.
 
   it("requires an irreversible-action confirmation in the workspace", async () => {
     const ui = await fs.readFile(

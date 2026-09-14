@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { VerifyClient } from "./VerifyClient";
 
@@ -34,20 +35,20 @@ export default function VerifyPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <a href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-900 text-sm font-bold text-white">
               D
             </div>
             <span className="text-sm font-semibold tracking-tight">
               Disclosed<span className="text-blue-800">.</span>
             </span>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/"
             className="text-sm text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline"
           >
             ← Back to home
-          </a>
+          </Link>
         </div>
       </header>
 

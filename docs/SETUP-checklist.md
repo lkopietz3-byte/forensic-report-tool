@@ -73,7 +73,7 @@ must cite it, or the sentence is flagged.
 **Verify:**
 - Visit `/workspace` → "Sign in to save" appears → magic-link email arrives → clicking it lands you signed in.
 - Build a report → **Save to my account** → reload → it appears under "Your saved reports" → **Open** → it rehydrates and the banner says **"Disclosure chain verified"** (the persisted hash chain re-verified on load).
-- Run the isolation test: set `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY` and run `npm test` — the previously-skipped `rls-isolation.test.ts` will run and prove one user cannot read another's cases/reports/audit.
+- Run `npm run test:db` against a loopback Supabase migrated through `0016` using the variables and safety rules in `RELEASE.md`. Remote targets are refused; a skipped suite is not a pass.
 
 ---
 

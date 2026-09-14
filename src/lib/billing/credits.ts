@@ -61,7 +61,7 @@ export async function grantCredits(
 
 /**
  * Atomically spend one credit (check balance > 0 and debit in a single,
- * per-user-serialized DB operation — see migrations 0007/0009/0010). A credit
+ * per-user-serialized DB operation — see migration 0013). A credit
  * covers a REPORT, not a download: pass the report-content fingerprint and a
  * repeat spend for the same content succeeds as `already_paid` without debiting.
  */
@@ -77,22 +77,4 @@ export async function spendCredit(userId: string, fingerprint?: string): Promise
     return "unavailable";
   }
   return normalizeSpendResult(data);
-}
-
-/**
- * Return a spent credit (when the export render fails after reserving). Carries
- * the fingerprint so the refund cancels that spend's "already paid" claim — a
- * later retry of the same report content debits normally instead of riding a
- * refunded fingerprint for free.
- */
-export async function refundCredit(userId: string, fingerprint?: string): Promise<void> {
-  if (!supabaseServiceConfigured()) return;
-  const svc = createServiceClient();
-  const { error } = await svc.from("credit_ledger").insert({
-    user_id: userId,
-    delta: 1,
-    reason: "adjustment",
-    export_fingerprint: fingerprint ?? null,
-  });
-  if (error) log.error("credits.refund_failed", { err: error.message });
 }

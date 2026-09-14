@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,17 +26,17 @@ export default function ForFirmsPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <a href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-900 text-sm font-bold text-white">
               D
             </div>
             <span className="text-sm font-semibold tracking-tight">
               Disclosed<span className="text-blue-800">.</span>
             </span>
-          </a>
-          <a href="/" className="text-sm text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline">
+          </Link>
+          <Link href="/" className="text-sm text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline">
             ← Back to home
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -86,12 +87,12 @@ export default function ForFirmsPage() {
         </Section>
 
         <div className="reveal mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row">
-          <a
+          <Link
             href="/#waitlist"
             className="inline-flex items-center justify-center rounded-xl bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white no-underline shadow-sm transition hover:bg-blue-950"
           >
             Talk to us about your team
-          </a>
+          </Link>
           <a
             href="/for-counsel"
             className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 no-underline transition hover:bg-slate-50"

@@ -2,6 +2,11 @@ import { defineConfig } from "vitest/config";
 import { fileURLToPath } from "node:url";
 
 export default defineConfig({
+  // Next preserves JSX for its own compiler; Vitest needs executable JSX when
+  // a focused test renders a real component with React's server renderer.
+  oxc: {
+    jsx: { runtime: "automatic" },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

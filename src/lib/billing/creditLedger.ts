@@ -59,7 +59,8 @@ export function creditGrantForSession(session: {
  * `already_paid` = this report content was already paid for (an idempotent
  * Word-then-PDF re-export), nothing debited; `insufficient` = out of credits;
  * `unavailable` = the ledger couldn't be reached OR returned an unexpected shape.
- * Only a `debited` result may be refunded on a later render failure.
+ * The export route renders before calling this function, so render failure
+ * creates no debit and needs no compensating refund.
  */
 export type SpendResult = "debited" | "already_paid" | "insufficient" | "unavailable";
 

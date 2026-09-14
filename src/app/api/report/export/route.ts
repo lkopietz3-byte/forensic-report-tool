@@ -12,7 +12,7 @@ import { getCurrentUser } from "@/lib/auth/user";
 import { createSupabaseServerClient } from "@/lib/supabase/serverClient";
 import { getSubscriptionFor } from "@/lib/billing/subscription";
 import { deriveTier } from "@/lib/billing/featureGates";
-import { getCreditBalance, spendCredit, refundCredit } from "@/lib/billing/credits";
+import { getCreditBalance, spendCredit } from "@/lib/billing/credits";
 import { reportFingerprint } from "@/lib/billing/creditLedger";
 import { createRateLimiter } from "@/lib/http/rateLimit";
 import { clientIp, readBoundedJson } from "@/lib/http/request";
@@ -65,8 +65,8 @@ export async function POST(request: Request) {
   // (NEXT_PUBLIC_FF_BILLING) — until Stripe exists, enforcing would lock free
   // users out of their own report. Pro subscribers export freely; everyone else
   // spends one report credit per export (the first credit is granted free). The
-  // credit is reserved AFTER the grounding gate, just before render, and
-  // refunded if the render fails — so a blocked/failed export never charges.
+  // credit is settled AFTER the grounding gate and successful render, before
+  // any bytes are returned — so a blocked/failed export never charges.
   let creditUserId: string | null = null;
   if (billingLive) {
     if (!user) {
@@ -78,15 +78,12 @@ export async function POST(request: Request) {
     const sb = await createSupabaseServerClient();
     const subscription = sb ? await getSubscriptionFor(sb, user.id) : null;
     if (deriveTier(subscription) !== "pro") {
-      creditUserId = user.id; // non-Pro: must spend a credit (reserved below)
+      creditUserId = user.id; // non-Pro: must settle a credit after rendering
     }
   }
 
   const format = new URL(request.url).searchParams.get("format") === "pdf" ? "pdf" : "docx";
 
-  let creditSpent = false;
-  let creditsRemaining: number | null = null;
-  let exportFingerprint: string | null = null;
   try {
     // Expert opted out of AI → assemble with the rule-based structurer (no model).
     const llm = parsed.data.noAi ? null : await getLiveClientOrNull();
@@ -125,47 +122,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Reserve a credit atomically (only after the report passed the grounding
-    // gate, so a blocked export never charges). Pro users never reach here.
-    // A credit covers a REPORT, not a download: the spend is keyed to a
-    // fingerprint of the report CONTENT (format and style excluded), so Word
-    // then PDF of the same report — or a re-download — debits exactly once.
-    if (creditUserId) {
-      exportFingerprint = reportFingerprint({
-        meta: parsed.data.meta,
-        profile: parsed.data.profile,
-        evidence: parsed.data.evidence,
-        sections: parsed.data.sections,
-      });
-      // Make sure the one free "first report" credit exists, then spend.
-      await getCreditBalance(creditUserId);
-      const spend = await spendCredit(creditUserId, exportFingerprint);
-      if (spend === "insufficient") {
-        return Response.json(
-          {
-            error: "You're out of report credits. Buy another report credit to export this version.",
-            code: "NEEDS_CREDIT",
-          },
-          { status: 402 },
-        );
-      }
-      if (spend === "unavailable") {
-        // Billing is live (isBillingLive gated us in) yet the ledger is
-        // unreachable — fail loudly instead of handing out a free export.
-        return Response.json(
-          { error: "Billing is temporarily unavailable. Please try again shortly." },
-          { status: 503 },
-        );
-      }
-      // Only a REAL debit is refundable if the render later fails. An idempotent
-      // "already_paid" re-export (Word then PDF of the same report) debited
-      // nothing this call, so refunding it would return a credit never spent.
-      creditSpent = spend === "debited";
-      // Current balance after the (idempotent) spend, surfaced to the client so
-      // it can confirm the export and refresh the displayed balance.
-      creditsRemaining = await getCreditBalance(creditUserId);
-    }
-
     // Image evidence → numbered figures, rendered after the body. They are cited
     // by id in the text like any evidence (grounding is unchanged); this just
     // carries the pixels to the exporter, which renders a Figures section.
@@ -185,6 +141,47 @@ export async function POST(request: Request) {
       style: normalizeStyle(parsed.data.style),
     };
     const buf = format === "pdf" ? await exportReportPdf(args) : await exportReportDocx(args);
+
+    // Settle payment only after a file rendered successfully. This avoids a
+    // reservation/refund race: with two concurrent requests for the same
+    // fingerprint, a failed renderer never debits, while successful renderers
+    // serialize in spend_credit and collectively create exactly one debit.
+    let creditsRemaining: number | null = null;
+    if (creditUserId) {
+      const exportFingerprint = reportFingerprint({
+        meta: parsed.data.meta,
+        profile: parsed.data.profile,
+        evidence: parsed.data.evidence,
+        sections: parsed.data.sections,
+      });
+      // Make sure the one free "first report" credit exists, then settle this
+      // successfully rendered report before any bytes are returned.
+      await getCreditBalance(creditUserId);
+      const spend = await spendCredit(creditUserId, exportFingerprint);
+      if (spend === "insufficient") {
+        return Response.json(
+          {
+            error: "You're out of report credits. Buy another report credit to export this version.",
+            code: "NEEDS_CREDIT",
+          },
+          { status: 402 },
+        );
+      }
+      if (spend === "unavailable") {
+        return Response.json(
+          { error: "Billing is temporarily unavailable. Please try again shortly." },
+          { status: 503 },
+        );
+      }
+      // A balance-refresh failure after settlement must not turn a successfully
+      // rendered, paid file into a 500. Omit the convenience header and return
+      // the file; the next account refresh can reconcile the display.
+      try {
+        creditsRemaining = await getCreditBalance(creditUserId);
+      } catch (error) {
+        logError("credits.balance_refresh_failed", error, { userId: creditUserId });
+      }
+    }
     const isPdf = format === "pdf";
     return new Response(new Uint8Array(buf), {
       status: 200,
@@ -200,8 +197,6 @@ export async function POST(request: Request) {
       },
     });
   } catch (err) {
-    // The render failed after we reserved a credit — give it back, whatever the cause.
-    if (creditSpent && creditUserId) await refundCredit(creditUserId, exportFingerprint ?? undefined);
     // Expected user error: the PDF font can't draw some characters in the
     // report. Tell the expert plainly and point them at the Word export rather
     // than returning a "try again" that can never succeed. No credit was kept.
