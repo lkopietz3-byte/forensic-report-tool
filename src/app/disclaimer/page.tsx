@@ -50,7 +50,8 @@ export default function DisclaimerPage() {
       <p>
         We reference public developments such as the discovery order in{" "}
         <em>Conservation Law Foundation v. Shell</em> (D. Conn. 2026) and reports
-        of expert testimony excluded over AI-hallucinated citations to explain why
+        of an expert declaration excluded for a preliminary-injunction motion over
+        AI-hallucinated citations to explain why
         documenting AI use matters. These are illustrations of an emerging area of
         practice, not legal advice about your matter.
       </p>

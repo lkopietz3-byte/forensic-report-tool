@@ -115,8 +115,8 @@ export interface ChainVerification {
  * event (its successor's prevHash points at a hash no longer present).
  *
  * This makes the log tamper-EVIDENT, not tamper-proof: it proves the records
- * presented are internally consistent and unaltered since hashing, not that no
- * one with write access ever rewrote the whole chain.
+ * presented are internally consistent. It does not establish completeness,
+ * authorship, or that no one with write access rewrote the whole chain.
  */
 export function verifyAuditChain(events: AuditEvent[]): ChainVerification {
   let expectedPrev = GENESIS_HASH;

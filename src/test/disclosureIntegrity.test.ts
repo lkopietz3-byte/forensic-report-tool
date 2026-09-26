@@ -85,7 +85,8 @@ describe("disclosure appendix — pure projection", () => {
     const a = generateDisclosureAppendix("r1", seededLog(), EVIDENCE);
     expect(a.integrity.verified).toBe(true);
     expect(a.integrity.note).not.toMatch(/may have been altered|verification failed/i);
-    expect(a.integrity.note).toMatch(/unaltered|consistent/i);
+    expect(a.integrity.note).toMatch(/internal consistency/i);
+    expect(a.integrity.note).toMatch(/does not prove completeness, authorship/i);
   });
 
   it("fails integrity when a recorded event is altered after the fact", () => {

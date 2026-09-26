@@ -12,8 +12,8 @@
 ## The one sentence that must never be wrong
 
 > "Disclosed. structures your own findings into a Rule 26(a)(2)(B)-organized report
-> and keeps an automatic, tamper-evident record of how AI was used — so you can
-> answer any question about AI methodology without reconstructing your session."
+> and keeps an automatic, tamper-evident record of AI activity to review when
+> its methodology is questioned."
 
 Commit this to memory. Every feature below is a sub-clause of that sentence.
 
@@ -25,25 +25,25 @@ Commit this to memory. Every feature below is a sub-clause of that sentence.
 
 Every factual sentence in the report must carry an inline citation marker — `[[E:id]]`
 — pointing to an evidence unit the expert personally entered. The id is the
-identifier of a specific piece of evidence in the expert's list. The model (or the
-rule-based formatter, in no-AI mode) operates only on the evidence it was given; it
-has no access to the internet, prior cases, or any information source outside what
-the expert supplied for this matter.
+identifier of a specific piece of evidence in the expert's list. The prompt
+instructs the model to use the evidence supplied for this matter.
+The model may still draw on prior knowledge; the citation-ID gate cannot detect
+that when an allowed ID is attached to an unsupported claim.
 
 Two mechanisms enforce the contract:
 
-1. **`[Expert input needed: …]` placeholders.** When the supplied evidence does not
-   support a sentence, the model emits a placeholder rather than inventing content.
-   The expert sees it in the preview; it stays visible until the expert fills it in.
-   Gaps surface; they are never filled silently.
+1. **`[Expert input needed: …]` placeholders.** The prompt instructs the model
+   to emit a placeholder when evidence is insufficient. The expert sees any
+   emitted placeholder in the preview and must
+   also review the rest of the draft for unsupported content.
 
 2. **Export hard-block (HTTP 422).** When the expert clicks "Download Word (.docx)"
    or "Download PDF", the server re-runs `checkGrounding` against every factual
    sentence before rendering the file. If any sentence is ungrounded (no citation)
    or carries a citation to an id that was not supplied for this report, the export
    returns HTTP 422 and the UI shows the offending sentences — the file is never
-   produced. The expert cannot accidentally export an ungrounded report by
-   bypassing the preview.
+   produced. This prevents export of uncited or unknown-ID sentences even if
+   preview feedback was missed; it does not check factual support.
 
 The grounding logic lives in `src/lib/domain/grounding.ts`. It is framework-agnostic
 and fully unit-tested. The export gate lives in `src/app/api/report/export/route.ts`
@@ -51,24 +51,26 @@ and cannot be weakened without breaking a CLAUDE.md invariant.
 
 ### The buyer pain it answers
 
-The cases that get vocational experts excluded — *Kohls v. Ellison*, *Concord Music
-Group v. Anthropic*, *Matter of Weber* — share a common failure mode: AI introduced
-content the expert could not trace, explain, or source. The grounding contract makes
-that failure structurally impossible: the model cannot cite a source that was not
-supplied, and the file cannot be produced if it tries.
+Cases across different expert disciplines illustrate distinct consequences:
+*Kohls* excluded a declaration on a preliminary-injunction motion; *Concord*
+struck one paragraph; *Weber* declined to credit unreliable damages calculations
+and separately discussed unexplained Copilot use. These cases support careful
+source verification, not a prediction of admissibility. See the
+[case summaries and court sources](00-content-brief.md#case-law--use-only-these-with-this-framing-and-these-caveats). The citation-ID gate
+catches unknown citations before export. It cannot detect an invented claim
+attached to an allowed ID, so expert source review is essential.
 
 ### One-sentence talking point
 
-"The system can only cite sources you gave it, and the file won't export if a single
-sentence is missing its citation — that's the structure that keeps you traceable
-under cross-examination."
+"Export blocks sentences with missing or unknown citation IDs. You review the
+actual source relationships before signing."
 
 ### Honest limit
 
-The grounding contract proves that each sentence in the export is traced to a source
-the expert supplied. It does not verify that the source itself is accurate, that the
-expert's interpretation of it is correct, or that the expert's conclusions will
-survive Daubert challenge. The expert is the author; the expert confirms and signs.
+The grounding check confirms that report sentences cite IDs from the supplied
+set. It does not verify that a cited source supports a sentence, that the source
+is accurate, or that the conclusions will survive a legal challenge. The expert
+must review, adopt, and sign the report; the product does not establish authorship.
 
 ---
 
@@ -76,19 +78,21 @@ survive Daubert challenge. The expert is the author; the expert confirms and sig
 
 ### What it is
 
-Every time a section is structured — whether by the AI model or the rule-based
-formatter — an event is appended to the audit log. Each event records:
+For each evidence-required section structured by the AI model or rule-based
+formatter, an event is appended to the audit log. Deterministic profile sections
+do not produce an event. Each recorded event includes:
 
 - which section was being structured
 - the model name and version (e.g. `claude-3-5-sonnet-20241022`)
-- the exact evidence unit ids that were fed to the model for that section
+- the evidence unit IDs recorded as fed to the model for that section
 - a timestamp
 - a SHA-256 hash of the event chained to the hash of the previous event
 
-The chain is **append-only**: the database schema uses INSERT-only Row Level Security
-(`src/supabase/migrations/0004_…`) so events cannot be updated or deleted. When a
-saved report is loaded, the server re-runs `verifyAuditChain` over the entire chain;
-if any entry was altered, deleted, or reordered, the chain check fails and the
+The chain is **append-only** for the app role: Row Level Security in
+`supabase/migrations/0004_persistence_and_billing.sql` denies updates and deletes.
+When a saved report is loaded, the server re-runs `verifyAuditChain` over the
+presented chain;
+if the presented chain has a broken entry or link, the check fails and the
 workspace shows: "Note: the saved disclosure chain failed verification."
 
 ### The AI-Disclosure Appendix
@@ -101,7 +105,7 @@ export, contains:
   produced any text)
 - A table: section / model and version / evidence sources provided
 - An integrity note: "Each entry in this record is cryptographically linked to the
-  entry before it, so any later edit or deletion would be detectable."
+  entry before it, so a broken presented chain can be detected."
 
 Profile sections (qualifications, prior testimony, compensation) are authored
 directly by the expert and involve no model call; they do not appear in the
@@ -109,12 +113,12 @@ disclosure table.
 
 ### Why "tamper-evident, not tamper-proof"
 
-The hash chain makes any alteration to a stored entry **detectable** — the next
-entry's hash will not match. It does not prevent someone with direct database write
-access from rewriting the entire chain. This is an important honest distinction.
+The hash chain detects inconsistencies in the presented sequence of entries.
+It does not prevent someone with direct database write access from rewriting
+the entire chain. This is an important honest distinction.
 When an opposing counsel asks whether the disclosure record could have been altered,
 the correct answer is: "The record was tamper-evident at the time of export; the
-chain verified as unaltered then. Wholesale rewriting the chain is theoretically
+chain passed an internal consistency check then. Wholesale rewriting is
 possible by anyone with admin database access, which is why 'tamper-evident' is the
 right word, not 'tamper-proof'."
 
@@ -123,13 +127,16 @@ rule, not a style preference.
 
 ### The buyer pain it answers
 
-*Conservation Law Foundation v. Shell Oil* (D. Conn.) — a magistrate ordered the
-expert to produce her AI prompts as discoverable Rule 26 methodology. [**Critical
-caveat:** this is a non-final magistrate order, objected to under Rule 72(a) and
-stayed pending review — a signal of direction, not settled law. Always say so.] The
-audit log and appendix are the answer to that order before it is issued: the expert
-can produce exactly which sections, which model version, and which evidence was
-provided, without needing to reconstruct a session from memory.
+*Conservation Law Foundation v. Shell Oil* (D. Conn., May 18, 2026) ordered
+CLF to revise discovery responses concerning expert-team AI prompts/queries,
+produce responsive material, or certify after diligent search that none existed.
+The order addressed document-culling methodology on the facts of that case.
+[Court-text order copy](https://websitedc.s3.amazonaws.com/documents/Conservation_Law_Foundation_Inc._v._Shell_Oil_Company_3_21-cv-00933__CourtListener.com.pdf). The June 3, 2026 stay pending review
+was reported in secondary sources; current docket status was not independently
+verified in the September 26, 2026 review. Check the docket before public use.
+The audit log and appendix describe recorded sections, model versions, and
+evidence IDs. They do not establish that all material responsive to a discovery
+request has been retained or produced.
 
 ### One-sentence talking point
 
@@ -138,7 +145,8 @@ reconstructed from memory after the fact."
 
 ### Honest limit
 
-The audit log records events faithfully if the software runs as designed. It is not
+The audit log reflects the events presented to it when the software runs as designed;
+its hash check alone cannot establish that all activity was recorded. It is not
 an independent third-party attestation, and it does not constitute a legal instrument.
 Whether any given disclosure satisfies a court's requirements remains a judicial
 determination. We are not a law firm; verify the applicable rules for your
@@ -152,8 +160,9 @@ jurisdiction. This is general information, not legal advice.
 
 The AI assistance toggle in the workspace (labelled "Use AI to help structure the
 writing") can be turned off. In that mode, the report is assembled by a fixed,
-rule-based formatter: no generative model is invoked, and the disclosure statement
-in the appendix states: "No generative AI model produced any text in this report."
+rule-based formatter: no generative model is invoked for report assembly, and
+the disclosure states that no generative model call appears in its assembly log.
+This toggle does not assess outside text or govern every intake operation.
 The evidence is still organized by section, citations still work identically, and
 the export gate still enforces grounding. The difference is that the prose is the
 expert's confirmed text, re-emitted with its citation — the formatter originates
@@ -288,12 +297,14 @@ BMP, GIF, WebP). Scanned PDFs and image files are processed by a self-hosted
 Tesseract OCR engine — the engine and a compact English model are bundled with the
 app from `public/tesseract/`, with no CDN dependency.
 
-**The file never leaves the browser.** All parsing — PDF text extraction via pdfjs,
-Word parsing via mammoth, spreadsheet parsing via SheetJS, OCR via Tesseract — runs
-entirely in the client. The only thing sent to the server is the extracted text,
-after the expert has reviewed it and clicked "Pull items from this text." This is a
-confidentiality feature: case records containing PHI, trade secrets, or attorney
-work-product never travel to Disclosed.'s servers.
+**Original document bytes are parsed in the browser.** PDF text extraction uses
+pdfjs, Word parsing uses mammoth, spreadsheet parsing uses read-excel-file, and
+OCR uses Tesseract. The extracted text can be sent to the app server when the
+expert requests extraction or report building; configured live AI may send that
+text to the model provider. Export and save also process report content on the
+server. Browser parsing limits transmission of the original file, but it does
+not keep sensitive text off servers. Early access forbids real matters, PHI,
+privileged material, and material under a protective order.
 
 OCR'd text is flagged with: "Read by OCR — check the text against the original
 before pulling items." The expert is responsible for verifying the extracted text
@@ -309,16 +320,16 @@ than no read.
 
 ### The buyer pain it answers
 
-Forensic case records routinely contain PHI. Experts — and especially their
-retaining counsel — need assurance that uploading a medical record or deposition
-transcript to a cloud tool does not transmit the patient's or client's data to a
-third-party server. Client-side processing removes that concern entirely for the
-intake step.
+Forensic case records can contain PHI and privileged material. Browser parsing
+keeps the original file bytes local during intake, while extracted text may still
+be transmitted for processing. That distinction and the provider's data terms
+must be understood before any authorized use with real case material; current
+early-access terms do not permit it.
 
 ### One-sentence talking point
 
-"The file stays on your machine — only the text you pull from it, and only after you
-review it, is sent to the server."
+"The original file is parsed in your browser. When you request processing, its
+extracted text or report content may be sent to our server and model provider."
 
 ### Honest limit
 
@@ -409,7 +420,7 @@ any evidence has image attachments, an Exhibits section for tabular exhibits, an
 the AI-Disclosure Appendix.
 
 Citation markers (`[[E:id]]`) are stripped from the export prose — the reader sees
-clean text. The disclosure appendix carries the complete evidence-to-section mapping.
+clean text. The disclosure appendix carries the recorded evidence-to-section mapping.
 
 ### One-sentence talking point
 
@@ -431,8 +442,8 @@ limits, not roadmap teases.
 
 | What it does not do | Why |
 | --- | --- |
-| Does not form opinions | The tool can only structure, format, and organize what the expert supplies. It has no domain knowledge of vocational rehabilitation, engineering, or any other discipline. |
-| Does not verify sources | Grounding proves that a sentence cites a source the expert supplied — not that the source itself is accurate. |
+| Does not validate opinions | The model may produce opinion-like wording; the expert must review, revise, and adopt every conclusion. The tool does not establish its professional validity. |
+| Does not verify sources | The check validates citation IDs, not whether the cited source supports the claim or is accurate. |
 | Does not guarantee admissibility | Admissibility is a judicial determination. The tool is designed to support disclosure; whether that disclosure satisfies a court's requirements is the court's call. |
 | Does not guarantee Rule 26 compliance | The report is organized to the Rule 26(a)(2)(B) structure and the readiness check flags missing elements. Whether the content in those elements is legally sufficient is not ours to determine. |
 | Does not file with the court | It produces Word and PDF files; what happens next is the expert's and counsel's responsibility. |

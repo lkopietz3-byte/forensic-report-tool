@@ -22,10 +22,10 @@ and so the blocker for each is explicit. Most items are gated on auth + database
 - **CSP per-request nonce** — DONE (`src/middleware.ts` + `src/lib/security/csp.ts`),
   including `style-src-elem` hardening and Supabase `connect-src`.
 - **HSTS ramp to 1 year** — DONE (`includeSubDomains`/`preload` deliberately later).
-- **Dependency/tooling security refresh** — DONE. Next.js is pinned to the
-  patched 15.5.21 release, PostCSS and Sharp are overridden to patched versions,
-  the missing PDF encoding dependency is explicit, and Vitest is on 4.1.10.
-  Both the runtime and full `npm audit` are clean.
+- **Dependency/tooling security refresh** — the earlier lockfile acquired five
+  production advisories. The 2026-09-26 candidate updates Next.js and affected
+  transitives; both local production and full npm audits now report zero findings.
+  Live deployment of the patched revision remains to be verified (`SECURITY.md`).
 - **Rendered buyer-UI polish** — DONE. The live browser pass normalized brand
   lockups and tertiary links, made disabled treatment consistent, removed
   scroll-linked opacity from document content, and kept the intake upload well

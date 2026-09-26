@@ -178,10 +178,13 @@ themselves.
   answer today?" *(listen for discomfort — that discomfort is the product's
   reason to exist.)*
 - Only **if they ask** what you mean, reference the moment factually and briefly:
-  a declaration was struck in *Kohls v. Ellison* over fabricated cites; in *CLF v.
-  Shell* a magistrate ordered an expert to produce her AI prompts — **and note
-  that last one is a non-final order under review.** Then return the floor. This is
-  context on request, not a pitch.
+  *Kohls v. Ellison* excluded Hancock's declaration on a preliminary-injunction
+  motion after fabricated citations undermined its credibility. The May 18, 2026
+  *CLF v. Shell* order required revised discovery responses and responsive
+  expert-team prompts/queries, or certification after diligent search that none
+  existed. A June 3 stay was reported; **current status was not independently
+  verified on September 26, 2026.** Recheck before citing. Then return the floor.
+  See the [case summaries and court sources](00-content-brief.md#case-law--use-only-these-with-this-framing-and-these-caveats).
 
 | | Sounds like |
 | --- | --- |
@@ -207,7 +210,7 @@ it down word-for-word; it feeds `04-objection-handling.md`.
 
 **Pricing validation — get these three answered (the calls set the price, not a spreadsheet):**
 1. *"How many reports do you write in a typical year?"* — the number that decides per-report vs. annual. (Confirm against Block A.)
-2. *"For a tool that does the structuring and keeps the disclosure record — with you still authoring every word — what would you pay per report?"* — let them name it first; don't anchor.
+2. *"For a tool that structures a draft and keeps a disclosure record — with you reviewing, adopting, and signing — what would you pay per report?"* — let them name it first; don't anchor.
 3. *"Per report, or one annual flat rate — and at what yearly number does the annual become an obvious yes?"* — settles the hero tier and what to charge for it.
 
 Log all three in the five answers (§8). Across ~8–10 calls the *distribution* — not any single reply — is what sets the price.
@@ -234,7 +237,7 @@ critique.
   > it? I want the holes, not a compliment."
 - Show **two things and stop:** (1) the body with a couple of cited sentences;
   (2) the **AI-Disclosure Appendix** in the export — "this records each AI-assisted
-  section, the model and version, and exactly the evidence it was given." Then ask
+  section, the model and version, and the evidence IDs recorded as supplied to it; the expert checks the record and the underlying sources." Then ask
   "what would your version need?" and go quiet.
 
 **The demo (`/intake`) — only on pull:** if they say "wait, how does it know not
@@ -267,7 +270,7 @@ community.
 > You're the expert; that's the whole reason I want to build this *with* people
 > like you. What I do understand is the **AI-disclosure problem** — how to keep an
 > honest, contemporaneous record of how AI was used — and I've built the tool so
-> it **structures your findings and never puts words in your mouth.** The
+> it **structures your findings for your review, with citation-ID checks.** The
 > methodology has to come from you. The template I've drafted is desk research
 > until someone like you red-teams it."
 

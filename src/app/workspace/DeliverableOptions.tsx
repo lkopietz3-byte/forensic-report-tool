@@ -217,9 +217,9 @@ export function DeliverableOptions({
           <div className="grid gap-2 sm:grid-cols-2">
             {([
               ["includeCoverPage", "Cover page", "A title page with the matter caption, your name and role, the report date, and a confidentiality legend. The signature line is left blank for you to sign."],
-              ["includeDisclosure", "AI-Use Disclosure appendix", "The record of how AI was used: each AI-assisted section, the model and version, and the exact evidence it was given. It's generated automatically, and it's what you'd point to if your AI use is ever questioned."],
+              ["includeDisclosure", "AI-Use Disclosure appendix", "The record lists each AI-assisted section, model, version, and IDs of evidence items supplied. It's generated automatically; keep it with your case file for review if AI use is questioned."],
               ["includeMapping", "Data-to-opinion mapping appendix", "For each opinion, a side-by-side of the evidence it actually cites versus evidence you provided but didn't cite. That way, the basis for a challenged opinion is easy to trace."],
-              ["includeReadiness", "Readiness check page (for your file copy only, off by default)", "The tool's own checks (completeness, every sentence cited, record integrity). Handy for your QA, but usually left off the filed copy since it isn't part of the report."],
+              ["includeReadiness", "Readiness check page (for your file copy only, off by default)", "The tool's citation-ID and presented hash-chain checks. Handy for your QA, but it does not establish source support or record completeness and is usually left off the filed copy."],
             ] as const).map(([key, label, tip]) => (
               <div key={key} className="flex items-start gap-2.5 rounded-lg px-1 py-1 text-sm text-slate-700">
                 <input

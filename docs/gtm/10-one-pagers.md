@@ -39,9 +39,9 @@ Disclosed. structures and assembles them into a Rule 26(a)(2)(B)-organized
 report: opinions with basis and reasons, facts or data considered, exhibits,
 qualifications, prior testimony, compensation statement.
 
-By design, the tool cannot introduce a fact, figure, opinion, or citation you
-did not supply. Every sentence must trace to a source you provided, or the tool
-flags it and blocks export until you resolve it. You review the structured output,
+The tool is designed to use the material you supply. Export blocks sentences
+with missing or unknown citation IDs; an allowed ID does not prove its source
+supports the claim. You review the structured output against its sources,
 independently verify it, edit it, adopt it, and sign it.
 
 ---
@@ -50,17 +50,17 @@ independently verify it, edit it, adopt it, and sign it.
 
 ### An AI-Disclosure Appendix built to produce, not reconstruct
 
-Every AI-assisted section is logged automatically in a tamper-evident,
-append-only record: which section, which model and version, and exactly the
-evidence you gave it — and nothing you did not give it. That log becomes an
+AI-assisted sections are logged in a tamper-evident, append-only record: the
+section, model and version, and evidence IDs recorded as supplied. That log becomes an
 AI-Disclosure Appendix attached to your export.
 
 If your AI use comes up in discovery or on cross-examination, you have a
-contemporaneous methodology record ready to hand over. You don't reconstruct
-it from memory months later.
+contemporaneous methodology record to review and produce as appropriate.
+Compare it with other records before relying on it as a complete account.
 
 The record is tamper-evident, not tamper-proof: each entry is cryptographically
-linked to the one before it, so a later edit or deletion is detectable.
+linked to the one before it, so inconsistencies in the presented chain can be
+detected. This does not prove that the chain is complete.
 
 If you used no AI on a section, the disclosure says so. There is also a fully
 deterministic mode — no AI model involved at all — for reports where you want
@@ -133,13 +133,12 @@ covers the same ground in more detail.*
 
 **[SECTION 2 — THE TOOL'S ROLE]**
 
-### It organizes the expert's own findings — it does not originate them
+### It organizes the expert's own findings for review
 
 The tool structures and formats material the expert supplies into the Rule
-26(a)(2)(B) report format. By design it cannot introduce a fact, figure,
-opinion, or citation the expert did not provide. Every factual sentence must
-cite a source the expert supplied; anything that cannot be tied to a supplied
-source is flagged, and export is blocked until the expert resolves it.
+26(a)(2)(B) report format. Export blocks report sentences with missing or
+unknown citation IDs. The expert must verify that each cited source supports
+the claim; the automated check cannot determine that.
 
 The expert independently verifies, reviews, adopts, and signs.
 Authorship and liability sit with the expert, not with the tool.
@@ -163,15 +162,15 @@ jurisdiction.*
 
 Disclosed. builds the methodology record in advance:
 
-- **What is logged:** each AI-assisted section, the model and version, and the
-  exact evidence the expert gave it — and nothing it was not given.
-- **How it is kept:** append-only, tamper-evident (each entry cryptographically
-  linked to the one before it; a later edit or deletion is detectable).
+- **What is logged:** AI-assisted sections, model and version, and evidence IDs
+  recorded as supplied to the model.
+- **How it is kept:** append-only, tamper-evident (entries are linked so a broken
+  presented chain can be detected; verification does not prove completeness).
 - **What it produces:** an AI-Disclosure Appendix in the exported report.
 
 If your expert's AI use comes up in a motion to compel or on cross, they have
-a contemporaneous, structured record to produce — not a reconstruction from
-memory.
+a contemporaneous, structured record to review and produce as appropriate.
+They should compare it with other records before treating it as complete.
 
 The Rule 26(a)(2)(B) structure the tool enforces also addresses the
 "facts or data considered" and "basis and reasons" elements that cross-

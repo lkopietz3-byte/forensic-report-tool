@@ -6,10 +6,10 @@ isn't: the closed-world grounding contract, the tamper-evident audit chain, and
 the projections built on top of them (disclosure appendix, data→opinion
 reconstruction, report-readiness verdict).
 
-The one invariant, restated because everything below serves it: **the tool never
-originates facts, opinions, numeric ranges, or citations.** Every layer here is
-either an input the expert supplied, a verification of that input, or a
-projection of the audit record. None of them can introduce content.
+The design invariant: **the tool should not originate facts, opinions, numeric
+ranges, or citations beyond the expert's material.** The automated checks below
+validate citation IDs and record consistency, not whether a cited source entails
+a claim. Expert review of the report and its sources remains necessary.
 
 ---
 
@@ -45,11 +45,12 @@ keyless preview-mode note in `CLAUDE.md`.)
 
 ## The closed-world grounding contract (`grounding.ts`)
 
-The mechanism that makes "never originate" enforceable rather than aspirational.
+The citation-ID check that supports the closed-world design; it does not verify
+that the cited evidence supports the sentence.
 
 - Report text cites evidence with `[[E:<id>]]` markers (`CITATION_RE`).
-- Gaps the tool refuses to fill are surfaced as `[Expert input needed: …]`
-  placeholders (`PLACEHOLDER_RE`) — never silently invented.
+- The prompt instructs the model to surface gaps as `[Expert input needed: …]`
+  placeholders (`PLACEHOLDER_RE`); this check recognizes those placeholders.
 - `classifySentence()` labels each sentence `grounded | placeholder | ungrounded
   | invalid` (`invalid` — a cite to an id outside the supplied set — outranks
   `placeholder`, because a fabricated cite is the more dangerous failure).
@@ -61,15 +62,16 @@ The mechanism that makes "never originate" enforceable rather than aspirational.
 - `stripCitationMarkers()` produces the reader-facing prose; the markers live on
   for the audit/appendix, not the signed page.
 
-"Closed-world" means: the only ids that count as grounded are the ones fed to the
-model for that section. Anything else is `invalid`, by construction.
+"Closed-world" here means that only IDs fed to the model for that section count
+as valid citations. An allowed ID can accompany an unsupported or false claim;
+`grounded` is a structural classification, not a factual finding.
 
-The model boundary is enforced again in `prompts.ts`: the system prompt's
-absolute rules ("use only the supplied evidence; cite every factual sentence;
-never originate; emit a placeholder if insufficient"), plus
-`sanitizeEvidenceText()` which neutralizes prompt-injection in the untrusted
-evidence block (strips control chars, defangs existing markers and angle
-brackets). Grounding is the verifier; the prompt is the first line.
+The model is instructed in `prompts.ts` by the system prompt's rules ("use only
+the supplied evidence; cite every factual sentence; never originate; emit a
+placeholder if insufficient"). `sanitizeEvidenceText()` strips control chars
+and defangs existing markers and angle brackets in untrusted evidence. The
+prompt steers generation and the grounding check validates IDs; neither
+guarantees semantic support or prevents every prompt injection.
 
 ---
 
@@ -84,17 +86,20 @@ Append-only, hash-chained, **per report**.
   hash identically — the hash can't be gamed by key order.
 - There is **no update and no delete.** Appended events are `Object.freeze`d.
 - `verifyAuditChain()` recomputes the chain and reports the first break,
-  detecting three tampering modes: a mutated field, a severed link, and a removed
-  event.
+  detecting a mutated field or severed link in the presented chain. A
+  truncated or wholly rewritten chain may still verify without an independent
+  trusted anchor.
 
-This is **tamper-evident, not tamper-proof**: it proves the presented records are
-internally consistent and unaltered since hashing — not that no one with full
-write access ever rewrote the entire chain. The copy says exactly that, never
-more (see `VOICE.md`).
+This is **tamper-evident, not tamper-proof**: it checks internal consistency of
+the presented records, not completeness, authorship, or whether someone with
+full write access rewrote the chain. The copy says exactly that, never more
+(see `VOICE.md`).
 
-> Persistence (deferred): map `append` to an INSERT into an append-only
-> `audit_events` table with INSERT-only RLS (no UPDATE/DELETE grant), and re-run
-> `verifyAuditChain` on read. Tracked in `DEFERRED.md`.
+> Saved reports persist the audit fields in `audit_events` through
+> `src/app/api/report/save/route.ts` and migration `0004`. The table has
+> INSERT-only RLS policies for the signed-in owner; `/api/report/[id]`
+> re-verifies the stored chain on read. This protects the presented record
+> against accidental changes, but cannot prove that every activity was logged.
 
 ---
 
@@ -108,22 +113,24 @@ re-present recorded ones.
 `generateDisclosureAppendix(reportId, audit, evidence)` walks the report's audit
 events into a structured record: the fixed disclosure statement, the distinct
 models used, and per-section entries (model/version, the evidence sources fed,
-timestamp), plus the `verifyAuditChain` integrity result. Built **only** from the
-log, so it cannot drift from what actually happened.
+timestamp), plus the `verifyAuditChain` integrity result. Built from the
+recorded events, it reflects the log as presented; it cannot independently
+prove that the log captures all activity.
 
 ### Data→opinion reconstruction (`reconstruction.ts`) — the challenge view
 `reconstructOpinion()` answers the deposition/Daubert question "where did *this*
 opinion come from?" For one section it separates:
-- **`reliedOn`** — evidence the *adopted* (signed) text actually cites *and* that
-  was fed to the model.
-- **`fedButNotReliedOn`** — provided but not cited (considered, not relied on).
-- **`reliedOnButNeverFed`** — cited in the signed text but *never fed to any model
+- **`reliedOn`** — evidence the *adopted* text cites *and* that was recorded as
+  fed to the model; the label does not prove substantive reliance.
+- **`fedButNotReliedOn`** — recorded as provided but not cited.
+- **`reliedOnButNeverFed`** — cited in the adopted text but *not recorded as fed to a model
   call for that section*. Under the closed-world contract this MUST be empty; a
-  non-empty list is an **integrity alarm** — the exact fabrication failure mode
-  the product guards against.
+  non-empty list is an **integrity alarm** — one citation-ID mismatch the product
+  guards against. It does not detect an allowed ID attached to an unsupported
+  claim.
 
-It distinguishes the evidence *fed* to the model from the evidence the *signed
-text relies on* — the distinction a careful cross-examiner draws. Deterministic
+It distinguishes evidence *recorded as fed* to the model from evidence the
+adopted text *cites* — the distinction a careful cross-examiner draws. Deterministic
 profile sections (qualifications, prior testimony, compensation) involve no model
 call, so they report `aiAssisted: false` and are not grounding-checked (checking
 them would mis-flag every plain sentence).
@@ -186,5 +193,5 @@ The high-risk files and the release gate are authoritative in `CLAUDE.md` and
 `RELEASE.md`. In short: any change to `grounding.ts`, `audit.ts`,
 `disclosure.ts`, `rule26.ts`, `reconstruction.ts`, `readiness.ts`, or
 `prompts.ts` must preserve the invariant — re-read it, and re-run those suites
-specifically. A change that lets any of these introduce a fact, number, or
-citation absent from supplied evidence is not a bug; it's the end of the product.
+specifically. Preserve the structural checks and test them, while requiring
+expert review for semantic support and factual accuracy.

@@ -4,7 +4,7 @@
 // bundle). Display only; the raw ids stay in the hash-chained audit record.
 
 // The internal id of the no-AI deterministic path. When EVERY recorded event
-// used it, no generative model produced any text and the disclosure must say so.
+// used it, no generative model call is recorded by this tool during assembly.
 export const STRUCTURER_MODEL = "deterministic-structurer";
 
 /**

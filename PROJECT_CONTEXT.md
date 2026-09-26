@@ -5,7 +5,7 @@ Mapped on **2026-09-26** from connected GitHub, Vercel, and Supabase metadata. T
 ## Identity and repository settings
 
 - Repository: [lkopietz3-byte/forensic-report-tool](https://github.com/lkopietz3-byte/forensic-report-tool)
-- Purpose: A tool that organizes a forensic expert’s own findings into structured, cited reports and records how AI was used without generating facts or opinions.
+- Purpose: A tool designed to organize a forensic expert’s own findings into structured, cited reports and record how AI was used. Its citation-ID checks do not prove that a source supports a statement; the expert must review the output.
 - GitHub visibility: **public**; default branch: **`main`**; archived: **no**.
 - Product stage, owner, production health, and GitHub protection/settings beyond the fields above: **not verified**.
 

@@ -463,7 +463,7 @@ export function IntakeFlow({ sections }: { sections: DraftableSection[] }) {
               className="mt-2 w-full resize-y rounded-xl border border-slate-300 bg-white p-4 font-mono text-[13px] leading-relaxed text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
             />
             <div className="mt-1 flex items-center justify-between text-xs text-slate-600">
-              <span>Treated as untrusted data, never as instructions.</span>
+              <span>The model is instructed to treat this as data, not instructions. Review its output.</span>
               <span>
                 {text.length.toLocaleString()} / {MAX_INPUT_CHARS.toLocaleString()}
               </span>

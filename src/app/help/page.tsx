@@ -23,7 +23,7 @@ const GROUPS: {
     items: [
       {
         q: "What does Disclosed. actually do?",
-        a: "The tool takes the findings, evidence, and notes you supply and structures them into a Rule 26(a)(2)(B)-organized report. Every factual sentence is tied to a source you provided. It also keeps an automatic, append-only record of how AI was used during that structuring, which becomes an AI-Disclosure Appendix in your export. You review, edit, and sign the result. Authorship and professional responsibility stay with you throughout.",
+        a: "The tool takes the findings, evidence, and notes you supply and structures them into a Rule 26(a)(2)(B)-organized report. Every factual sentence must carry an ID from your supplied evidence list; you check whether the source supports it. It also keeps an automatic, append-only record of how AI was used during that structuring, which becomes an AI-Disclosure Appendix in your export. You review, edit, and sign the result. Authorship and professional responsibility stay with you throughout.",
       },
       {
         q: "Who is the tool built for?",
@@ -57,7 +57,7 @@ const GROUPS: {
       },
       {
         q: "What do the green, amber, and red colors in the editor mean?",
-        a: "As you type or edit a section, each sentence is grounded in real time against the evidence you've added. Green means the sentence cites at least one source you supplied and that source is in your evidence list. Amber means the sentence contains an [Expert input needed: …] placeholder or hasn't been cited yet; the tool is waiting for your input. Red means the sentence makes a factual claim but has no citation, or cites an ID that isn't in your evidence list. Red or uncited sentences block export; you resolve them by adding the missing evidence or revising the sentence.",
+        a: "As you type or edit a section, citation IDs are checked against the evidence you've added. Green means at least one citation ID matches your evidence list; it does not mean the source supports the sentence. Amber means the sentence contains an [Expert input needed: …] placeholder. Red means a citation ID is unknown or the sentence has no citation. Resolve placeholders and red sentences before export, then verify the cited material yourself.",
       },
       {
         q: "Why did the tool flag my sentence even though I know the source?",
@@ -79,19 +79,19 @@ const GROUPS: {
     items: [
       {
         q: "What is in the AI-Disclosure Appendix?",
-        a: "For each AI-assisted section: the section name, the model name and version that processed it, and the exact list of evidence items the model was given, and nothing it was not given. The appendix also carries a statement that the expert reviewed, verified, edited, and adopted all content, and that no AI-produced text entered the report without that review. In no-AI mode the appendix states plainly that no model produced any text.",
+        a: "For each AI-assisted section: the section name, the model name and version that processed it, and the IDs of evidence items supplied for that section. The appendix also carries a statement for the expert to verify before signing about their review and adoption of the content. In no-AI mode it states that no generative model call appears in the report assembly log; it cannot assess text supplied from outside the tool.",
       },
       {
         q: 'What does "tamper-evident" mean, and what are its limits?',
-        a: "The audit log is append-only and hash-chained: each entry includes a cryptographic hash of the previous entry, so the chain can be verified from the beginning on every load. If the chain has been altered after the fact, verification fails and the workspace reports it. \"Tamper-evident\" means tampering is detectable, not that it's impossible. The tool cannot physically prevent someone with direct database access from altering a record. What it can do, and does, is make the alteration visible. That is the honest framing: the record makes tampering evident; it does not make tampering impossible.",
+        a: "The audit log links each entry to the previous entry with cryptographic hashes. Verification checks whether the entries presented are internally consistent. An isolated edit or a deletion from the middle breaks the chain unless it is recomputed; truncating the end may still pass. A pass cannot prove the record is complete, who created it, or that someone with write access did not rewrite the entire chain.",
       },
       {
         q: "Can the Appendix be removed from the export?",
-        a: "The AI-Disclosure Appendix is part of every export by design. Suppressing it would defeat the product's core purpose. If you use no-AI mode, the appendix still appears and states that no AI produced any text, which is itself a disclosure.",
+        a: "The AI-Disclosure Appendix is part of every export by design. Suppressing it would defeat the product's core purpose. In no-AI mode it still appears and states that no generative model call appears in the report assembly log.",
       },
       {
         q: "What is no-AI mode and when would I use it?",
-        a: "No-AI mode assembles and formats your report using a fixed, rule-based engine with no language model involved. Every sentence still has to cite evidence you supplied; the closed-world grounding and the export gate are unchanged. The AI-Disclosure Appendix then states deterministic-structurer (no-ai-v1) as the method, an accurate record that no model wrote anything. Use it when you want the structure and citation checking without any AI text in the chain, or when your retaining agreement or firm policy requires it.",
+        a: "No-AI mode assembles and formats your report using a fixed, rule-based engine without a language-model call from this tool. Every sentence still has to cite evidence you supplied; the citation and export gates are unchanged. The appendix records deterministic-structurer (no-ai-v1) as the method. It cannot determine whether material supplied from outside the tool was AI-generated, so review and disclose that separately when required.",
       },
     ],
   },
@@ -109,7 +109,7 @@ const GROUPS: {
       },
       {
         q: "What happens if I cite the same source in multiple sections?",
-        a: "That's fine and expected. The same evidence item can support sentences in different sections; the grounding check is per-sentence, not per-section. The disclosure appendix records each section's evidence list separately, so the record reflects exactly which sources were behind which section.",
+        a: "That's fine and expected. The same evidence item can be cited in different sections; the ID check is per-sentence, not per-section. You decide whether it supports each sentence. The disclosure appendix records each section's evidence list separately, so the record reflects exactly which sources were behind which section.",
       },
       {
         q: "Can I reorder my evidence items?",
@@ -181,7 +181,7 @@ const GROUPS: {
     items: [
       {
         q: "What does this tool NOT do?",
-        a: "This is the most important section in the help center. The tool does not originate opinions, facts, numbers, or citations. It structures and formats content you supply, and every factual sentence must trace to evidence you provided. It does not determine admissibility. Whether your report satisfies a particular court's standards is the court's determination, which no tool can promise. It does not make the audit chain impossible to alter. The chain is tamper-evident, meaning alteration is detectable, but the tool cannot prevent someone with direct database access from modifying a record. It does not hold any formal third-party security certification. We have data-handling commitments and engineering controls (encryption in transit and at rest, RLS-enforced user isolation), and we describe our protections honestly as commitments, not certifications. The vocational rehabilitation template is still being validated. It was built from peer-reviewed methodology and desk research, and it has not yet been reviewed by a practicing expert in the field, so treat it as a starting structure and apply your own professional judgment to every section. The tool does not validate your evidence. The grounding check verifies that a sentence cites a source you supplied, not that the source is accurate, complete, or admissible; you remain responsible for the underlying evidence and for confirming that your opinions are supported by sufficient facts and data under Fed. R. Evid. 702.",
+        a: "This is the most important section in the help center. The drafting path is designed to organize your supplied material without researching or supplying new facts. Model output still requires your review. It structures and formats content you supply, and every factual sentence must carry an ID from your evidence list. You must verify that the cited evidence supports the sentence. It does not determine admissibility. Whether your report satisfies a particular court's standards is the court's determination, which no tool can promise. It does not make the audit chain impossible to alter. The hash check can detect an isolated edit in the presented chain, but cannot prove completeness or rule out a full rewrite by someone with write access. It does not hold any formal third-party security certification. We have data-handling commitments and engineering controls (encryption in transit and at rest, RLS-enforced user isolation), and we describe our protections honestly as commitments, not certifications. The vocational rehabilitation template is still being validated. It was built from peer-reviewed methodology and desk research, and it has not yet been reviewed by a practicing expert in the field, so treat it as a starting structure and apply your own professional judgment to every section. The tool does not validate your evidence. The grounding check verifies that a citation ID matches your evidence list, not that the source supports the sentence or is accurate, complete, or admissible; you remain responsible for the underlying evidence and for confirming that your opinions are supported by sufficient facts and data under Fed. R. Evid. 702.",
       },
     ],
   },

@@ -16,8 +16,8 @@ If a sentence in any GTM asset breaks a rule here, the asset is wrong, not the r
 **Disclosed.** structures a forensic expert witness's **own** findings into a
 Federal Rule of Civil Procedure 26(a)(2)(B)-organized report, and keeps an
 automatic, **tamper-evident** record of how AI was used — each AI-assisted
-section, the model and version, and exactly the evidence it was given, and nothing
-it was not. The expert independently verifies, prepares, adopts, and signs. The structuring is
+section, the model and version, and the evidence IDs recorded as supplied to it.
+The expert independently verifies, prepares, adopts, and signs. The structuring is
 cloneable; the disclosure/methodology record is the moat, built for the moment a
 court or opposing counsel asks how AI was used.
 
@@ -38,9 +38,9 @@ the overstatement. **Underclaim on purpose.** Three adjectives for every asset:
 | Who prepares and signs | the expert **independently verifies, prepares, adopts, and signs** | we wrote · the AI wrote · our report |
 | Rule 26 | Rule 26(a)(2)(B)-**structured** · organized to the Rule 26 format · tracks every Rule 26 element | Rule 26-**compliant** · compliant · guaranteed |
 | Court outcome | designed to support · discloses · prepared for disclosure; **admissibility is the court's call** | court-defensible · admissible · will hold up in court |
-| Audit chain | **tamper-evident** · append-only · hash-chained | tamper-proof · immutable · unhackable |
+| Audit chain | **tamper-evident** · append-only · hash-chained | tamper-proof · immutable · unhackable · complete record |
 | Data handling | a **commitment / intent** not to train on your data; zero-retention *path* | we are SOC 2 · signed zero-retention contract · 100% secure |
-| Grounding | traced to a source you supplied · evidence-grounded · flags the gap | fact-checked · verified true · accurate |
+| Grounding | cites a supplied evidence ID · flags missing or unknown IDs · expert reviews support | fact-checked · verified true · accurate · source-proven |
 | Time savings | "report drafting is 3–5 hours you often can't bill"; attribute to the design cohort | "saves you 3–5 hours" (bare) · guaranteed faster |
 | Competitors | name the gap factually | the only · the best · disparagement |
 
@@ -61,16 +61,19 @@ something you don't have, leave a `[VERIFY: …]` placeholder.
 ## Grounded facts — the only domain/legal/product facts an asset may state
 
 ### Product (all already built)
-- **Closed-world grounding.** Every factual sentence must carry a citation marker
-  (`[[E:id]]`) to an evidence unit the expert supplied. Export **hard-blocks**
-  (HTTP 422) any report with an ungrounded sentence or a citation to an id that
-  wasn't supplied. Gaps surface as `[Expert input needed: …]`, never filled in.
+- **Closed-world grounding.** Report sentences must carry a citation marker
+  (`[[E:id]]`) to an evidence ID supplied for the section. Export **hard-blocks**
+  (HTTP 422) uncited sentences
+  or citations to IDs outside that set. An allowed ID does not prove that the
+  source supports the claim; the expert must review each source relationship.
+  Prompts instruct the model to use `[Expert input needed: …]` for gaps.
 - **The disclosure record.** A tamper-evident, append-only, hash-chained audit log
-  records each AI-assisted section, the model + version, and exactly the evidence
-  it was given → an **AI-Disclosure Appendix** in the export. The chain re-verifies
-  on load; tampering is *detectable*, not *prevented* (hence "tamper-evident").
-- **No-AI deterministic mode.** The whole report can be assembled with no model at
-  all; the disclosure then states that no AI produced any text.
+  records AI-assisted sections, model + version, and evidence IDs recorded as fed
+  → an **AI-Disclosure Appendix** in the export. The chain is checked for internal
+  consistency on load; that check does not establish completeness or authorship.
+- **No-AI deterministic mode.** Report assembly can use the rule-based formatter
+  without a model call from this tool; the disclosure records that no generative
+  model call appears in the assembly log. Outside text requires separate review.
 - **Live per-sentence grounding** in the editor (green / amber / red as you type).
 - **Evidence images** render as numbered figures; cited like any evidence.
 - **Court formatting:** continuous line numbers, Century Schoolbook, cover logo.
@@ -110,23 +113,31 @@ something you don't have, leave a `[VERIFY: …]` placeholder.
 > Every use ends with: *summaries, not legal advice; verify against the official
 > reporter; CLF v. Shell may change.*
 
-- **Kohls v. Ellison** (D. Minn., Jan 10, 2025) — expert let GPT-4o fill in
-  citations; it fabricated sources; declaration **struck** ("shatter[ed] his
-  credibility").
-- **Concord Music Group v. Anthropic** (N.D. Cal., May 2025) — real journal but
-  AI-invented title/authors; paragraph struck; "a world of difference between a
-  missed citation and a hallucination generated by AI."
-- **Matter of Weber** (N.Y. Sur. Ct., 2024) — expert used a chatbot to "check"
-  valuation math, couldn't recall the prompts or explain the method; valuation
-  found unreliable.
-- **Ferlito v. Harbor Freight** (E.D.N.Y., Apr 2025) — the **safe-harbor** case:
-  the expert drafted independently and used AI only to **confirm** conclusions he
-  had already reached; testimony **allowed**. This is the pattern the product is
-  built to support.
-- **Conservation Law Foundation v. Shell Oil** (D. Conn.) — a magistrate ordered an
-  expert to produce her AI **prompts** as discoverable Rule-26 methodology.
-  **Critical caveat:** non-final magistrate order, objected-to under Rule 72(a) and
-  stayed pending review — a **signal of direction, not settled law.** Always say so.
+- **Kohls v. Ellison** (D. Minn., Jan. 10, 2025) — fabricated citations
+  undermined Hancock's declaration; the court excluded it when deciding the
+  preliminary-injunction motion. [Court opinion](https://www.govinfo.gov/content/pkg/USCOURTS-mnd-0_24-cv-03754/pdf/USCOURTS-mnd-0_24-cv-03754-0.pdf).
+- **Concord Music Group v. Anthropic** (N.D. Cal., May 23, 2025) — AI formatting
+  introduced a fictitious title and inaccurate authors for a real, correctly linked
+  article. The court struck paragraph 9 and questioned the declaration's credibility.
+  [Court opinion](https://cases.justia.com/federal/district-courts/california/candce/5%3A2024cv03811/431519/377/0.pdf).
+- **Matter of Weber** (N.Y. Sur. Ct., 2024) — the court declined to credit unreliable
+  damages calculations and separately criticized unexplained, unverified Copilot use.
+  [Court opinion](https://www.nycourts.gov/REPORTER/3dseries/2024/2024_24258.htm).
+- **Ferlito v. Harbor Freight** (E.D.N.Y., Apr. 23, 2025) — the court found no
+  reliability problem from an expert's use of ChatGPT after writing his report to
+  confirm independently reached findings. The exclusion motion was denied after
+  consideration of qualifications and methodology as well. This fact-specific ruling
+  establishes no general safe harbor and does not validate this product.
+  [Court-authored opinion copy](https://websitedc.s3.amazonaws.com/documents/Ferlito_v._Harbor_Freight_Tools_USA_Inc._E.D.N.Y._April_23_2025.pdf).
+- **Conservation Law Foundation v. Shell Oil** (D. Conn., May 18, 2026) — the
+  magistrate ordered CLF to revise discovery responses concerning the expert team's
+  AI prompts/queries, produce responsive material, or certify after diligent search
+  that none existed. This addressed document-culling methodology on these facts.
+  [Court-text order copy](https://websitedc.s3.amazonaws.com/documents/Conservation_Law_Foundation_Inc._v._Shell_Oil_Company_3_21-cv-00933__CourtListener.com.pdf).
+  **Status limit:** a June 3, 2026 stay pending review was reported in secondary
+  sources; current docket status was not independently verified in the September 26,
+  2026 review. Check the docket before public use; do not present the reported stay
+  as a verified current status or the ruling as a universal disclosure requirement.
 - Background: **Fed. R. Evid. 702** (amended Dec 1, 2023 — sufficient facts/data +
   reliable application; burden on the proponent). **ABA Formal Op. 512** (AI use is
   permitted with competence + disclosure).

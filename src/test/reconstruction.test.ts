@@ -113,7 +113,7 @@ describe("reconstructOpinion", () => {
     const r = reconstructOpinion("r1", "analysis", sections, stubLog, evidence);
 
     expect(r.integrity.verified).toBe(false);
-    expect(r.integrity.note).toContain("verification failed");
+    expect(r.integrity.note).toContain("failed its internal consistency check");
   });
 
   it("treats a profile-rendered section as non-AI, not as ungrounded", () => {

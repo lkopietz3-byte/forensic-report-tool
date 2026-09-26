@@ -4,7 +4,7 @@ import { VerifyClient } from "./VerifyClient";
 export const metadata: Metadata = {
   title: "Verify a disclosure record",
   description:
-    "Independently verify a Disclosed. AI-disclosure manifest. The SHA-256 hash chain is recomputed in your browser, with no account and nothing uploaded, to confirm the record of how AI was used was not altered after it was made.",
+    "Check the internal hash-chain consistency of a Disclosed. AI-disclosure manifest in your browser, with no account and nothing uploaded.",
 };
 
 // A manifest can contain report prompts/outputs. It stays in the browser, and
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 // Public, account-free verification surface — the independent half of the
 // tamper-evidence story. Anyone holding a disclosure manifest (the expert,
 // retaining counsel, opposing counsel, a court) can confirm here that the record
-// of how AI was used was not altered after it was recorded, without trusting us:
+// of how AI was used is internally consistent, without trusting us:
 // the SHA-256 hash chain is recomputed in their own browser. Copy follows the
 // honesty rules — tamper-evident, never "tamper-proof"; admissibility is the
 // court's call and is not claimed here.
@@ -59,14 +59,13 @@ export default function VerifyPage() {
           Verify a report&apos;s AI-disclosure record
         </h1>
         <p className="mt-3 text-[0.95rem] leading-relaxed text-slate-600">
-          Every report built with Disclosed. carries a record of exactly how AI was
-          used. For each section, that means the model, the version, the evidence it
-          was given, and the prompt and output. The record is a hash chain: change one
-          entry and every entry after it stops matching. This page recomputes the chain{" "}
-          <strong className="font-semibold text-slate-800">in your browser</strong> from
-          a manifest you provide, so you can confirm the record was not altered after
-          it was made. You don&apos;t have to take our word for it, and the file never
-          leaves your computer.
+          A Disclosed. report includes an AI-use record. For each AI-assisted section,
+          it lists the model, version, supplied evidence IDs, prompt, and output. The
+          entries form a hash chain. This page checks a manifest you provide{" "}
+          <strong className="font-semibold text-slate-800">in your browser</strong>.
+          A pass shows those entries are internally consistent; it cannot
+          establish that the manifest contains every event originally recorded. The file
+          stays in your browser.
         </p>
 
         <VerifyClient />
@@ -75,14 +74,13 @@ export default function VerifyPage() {
           <h2 className="text-base font-semibold tracking-tight text-slate-900">How it works</h2>
           <ol className="reveal mt-3 space-y-3">
             <Step n={1}>
-              Each AI-assisted section is recorded as an append-only event: the model
-              and version, the evidence units provided to it, and the exact prompt and
-              output.
+              An AI-assisted section is recorded as an event with the model and version,
+              supplied evidence IDs, prompt, and output.
             </Step>
             <Step n={2}>
-              Every event is hashed with SHA-256 and linked to the one before it
-              (genesis is 64 zeros). Editing, deleting, or inserting any event after
-              the fact changes a hash and breaks the chain from that point on.
+              Each event is hashed with SHA-256 and linked to the one before it
+              (genesis is 64 zeros). An isolated edit or removal within the presented
+              chain breaks that link or hash unless the chain is recomputed.
             </Step>
             <Step n={3}>
               This page recomputes every hash from the manifest&apos;s own contents and
@@ -91,12 +89,10 @@ export default function VerifyPage() {
             </Step>
           </ol>
           <p className="mt-5 text-[0.95rem] leading-relaxed text-slate-600">
-            A pass is <strong className="font-semibold text-slate-800">tamper-evident</strong>:
-            it proves the records shown are internally consistent and unaltered since they
-            were hashed. On its own, it is not proof that no one with database write
-            access ever rewrote the whole record from its first entry. And whether any
-            disclosure satisfies a court&apos;s requirements is always the court&apos;s
-            determination.
+            A pass confirms the presented entries are internally consistent. It does not
+            prove the record is complete, establish who created it, or rule out a full
+            rewrite by someone with write access. Whether a disclosure satisfies a
+            court&apos;s requirements is the court&apos;s determination.
           </p>
         </section>
 
@@ -105,13 +101,13 @@ export default function VerifyPage() {
             <strong className="font-semibold text-slate-800">For experts and counsel:</strong>{" "}
             the expert exports a disclosure manifest alongside the report and keeps it with
             the case file. If the expert&apos;s AI use is ever questioned, anyone (including
-            opposing counsel) can verify here that the disclosed record is the one that was
-            made, unaltered. That is the point. The record is useful because it can be checked,
-            not because we ask anyone to trust our label.
+            opposing counsel) can check the consistency of the entries it contains here.
+            Keep the manifest with the case file so its provenance and completeness can
+            be assessed alongside the hash check.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">
             Retaining counsel can also make this a step of their own diligence: ask your
-            expert for the disclosure manifest and confirm here that it is intact before the
+            expert for the disclosure manifest and check its chain before the
             report is produced in discovery — rather than waiting for opposing counsel to run
             the same check.
           </p>

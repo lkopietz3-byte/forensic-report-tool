@@ -41,7 +41,7 @@ Do NOT explain our product first. Probe the pain:
 - "Has opposing counsel ever challenged your methodology or how you prepared the report?"
 - "Are you aware of the recent rulings where courts ordered experts to disclose the AI prompts they used in a report?" *(CLF v. Shell, 2026)*
 - "If you used an AI assistant to help draft, how nervous would you be about disclosure or a Daubert challenge?"
-- "Would a tool that automatically produced a court-ready record of exactly what it did — every source, every step, nothing invented — make you more or less likely to use AI?" *(→ Q4: is the audit trail valuable, or do they not care?)*
+- "Would a tool that recorded its AI-assisted sections, model version, and supplied evidence IDs — for you to review and disclose if needed — make you more or less likely to use AI?" *(→ Q4: is the audit trail valuable, or do they not care?)*
 - **Kill-criterion to listen for:** if they shrug at disclosure AND say boilerplate isn't their bottleneck, this discipline/segment is weak — note it.
 
 ## Willingness to pay (3 min)

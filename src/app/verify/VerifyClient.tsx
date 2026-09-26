@@ -192,7 +192,7 @@ export function VerifyClient() {
             <div className="rounded-2xl border border-emerald-300 bg-emerald-50 px-5 py-4">
               <p className="flex items-center gap-2 text-base font-semibold text-emerald-900">
                 <span aria-hidden className="text-lg">✓</span>
-                Record intact. Unaltered since it was recorded.
+                Presented entries pass the hash-chain check.
               </p>
               <p className="mt-1 text-sm text-emerald-800">
                 All {result.count} {result.count === 1 ? "entry" : "entries"} are
@@ -203,12 +203,12 @@ export function VerifyClient() {
             <div className="rounded-2xl border border-red-300 bg-red-50 px-5 py-4">
               <p className="flex items-center gap-2 text-base font-semibold text-red-900">
                 <span aria-hidden className="text-lg">✗</span>
-                Record altered. This manifest does not check out.
+                Hash-chain check failed for this manifest.
               </p>
               <p className="mt-1 text-sm text-red-800">
                 The chain breaks at entry {result.brokenAt + 1} of {result.count}
-                {result.reason ? `: ${result.reason}.` : "."} An entry was changed,
-                removed, or added after the record was made.
+                {result.reason ? `: ${result.reason}.` : "."} The presented entries
+                are not internally consistent; this check cannot determine why.
               </p>
             </div>
           )}
@@ -236,7 +236,7 @@ export function VerifyClient() {
                         {String(e.sectionKey).replace(/_/g, " ")}
                         {broken && (
                           <span className="ml-2 rounded bg-red-100 px-1.5 py-0.5 text-[0.7rem] font-semibold text-red-800">
-                            altered
+                            check failed
                           </span>
                         )}
                       </p>
@@ -281,11 +281,10 @@ export function VerifyClient() {
           </div>
 
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            This check is tamper-evident: a pass proves the records shown are
-            internally consistent and unaltered since they were hashed. It does not,
-            by itself, prove that no one with write access ever rewrote the entire
-            record from its first entry. The manifest contains the full prompts and
-            outputs. It is the methodology disclosure itself, not a summary of it.
+            A pass confirms the presented entries are internally consistent. It does
+            not prove completeness, authorship, or that no one with write access
+            rewrote the chain. The manifest includes recorded prompts and outputs;
+            compare it with the case file when assessing the disclosure.
           </p>
         </div>
       )}

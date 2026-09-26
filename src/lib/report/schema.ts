@@ -99,7 +99,8 @@ export const reportInputSchema = z.object({
   style: StyleSchema,
   // When true, the expert has opted out of AI assistance: the report is
   // assembled by the rule-based structurer with no model call, and the
-  // disclosure records that no AI produced any text. Default (false/absent) is
+  // disclosure records that no generative model call appears in the report
+  // assembly log. Default (false/absent) is
   // the AI-assisted path, gated the same way.
   noAi: z.boolean().optional(),
 });

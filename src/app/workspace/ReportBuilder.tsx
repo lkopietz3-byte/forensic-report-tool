@@ -580,7 +580,7 @@ export function ReportBuilder({
         return {
           tone: "red",
           label: "Not ready",
-          text: `${blocking} sentence${blocking === 1 ? "" : "s"} ${blocking === 1 ? "needs" : "need"} a source${chainBad ? ", and the disclosure chain failed to verify" : ""}. Export stays blocked until every factual line cites your evidence.`,
+          text: `${blocking} sentence${blocking === 1 ? "" : "s"} ${blocking === 1 ? "needs" : "need"} a listed citation ID${chainBad ? ", and the disclosure chain failed to verify" : ""}. Export stays blocked until the citation checks pass.`,
         };
       }
       if (chainBad) {
@@ -591,7 +591,7 @@ export function ReportBuilder({
       if (awaiting > 0) {
         return { tone: "amber", label: "Almost there", text: `Every factual line is cited. ${awaiting} section${awaiting === 1 ? "" : "s"} still awaiting your input.` };
       }
-      return { tone: "green", label: "Grounded", text: "Every sentence cites your evidence and the disclosure chain verified, so you're ready to export. “Cited” means a sentence traces to a source you supplied, not that the source proves it. That reliability judgment (FRE 702) stays yours." };
+      return { tone: "green", label: "Citations checked", text: "Citation IDs match your evidence list and the presented disclosure chain is internally consistent. Review each cited source for actual support before exporting. That reliability judgment (FRE 702) stays yours." };
     }
     const ready = units.filter((u) => u.content.trim() && u.location.trim()).length;
     return {
@@ -1326,7 +1326,7 @@ export function ReportBuilder({
           <label htmlFor={aiAssistanceId} className="font-medium text-slate-900">
             Use AI to help structure the writing
           </label>{" "}
-          <InfoTip text="On: a model arranges your confirmed findings into readable prose, source IDs are checked against your evidence list, and you review every line for substantive support. Off: a fixed, rule-based formatter assembles the report with no model involved, and the AI-Use Disclosure states that no AI produced any text." />
+          <InfoTip text="On: a model arranges your confirmed findings into readable prose, source IDs are checked against your evidence list, and you review every line for substantive support. Off: a fixed, rule-based formatter assembles the report without a model call from this tool; the disclosure records that no generative model call appears in the assembly log. Review any outside text separately." />
           <span id={aiAssistanceDescriptionId} className="mt-1 block text-xs text-slate-500">
             {noAi
               ? "Off. Rule-based only: no model is used, and the disclosure will say so."
@@ -1481,7 +1481,7 @@ export function ReportBuilder({
                     : previewPresentation && previewPresentation.attention > 0
                       ? `${previewPresentation.attention} section${previewPresentation.attention === 1 ? "" : "s"} need your judgment`
                       : "A concise preview of the finished report"}{" "}
-                  <InfoTip text="Each section shows a status: “Cited” (every sentence traces to your evidence), “Needs review” (a sentence isn't cited, so fix it before export), or “Awaiting your input” (a spot you still need to fill). Export stays blocked while anything reads “Needs review.”" />
+                  <InfoTip text="Each section shows a status: “Cited” (citation IDs match your evidence list; check their actual support), “Needs review” (a citation is missing or unknown), or “Awaiting your input” (a spot you still need to fill). Export stays blocked while anything reads “Needs review.”" />
                 </h2>
                 <p className="mt-1 text-xs leading-relaxed text-slate-500">
                   Disclosed. leads with anything requiring action and keeps the
@@ -1647,7 +1647,7 @@ export function ReportBuilder({
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-sm font-semibold text-slate-800">
                 AI-Disclosure record{" "}
-                <InfoTip text="The auto-generated record of AI use that becomes the appendix in your export: each AI-assisted section, the model and version, and the evidence it was given. “Chain verified” means each entry is cryptographically linked to the one before it, so a later edit or deletion can be detected. It makes tampering evident, not impossible." />
+                <InfoTip text="The AI-use record that becomes the appendix in your export lists each AI-assisted section, model, version, and supplied evidence IDs. “Chain verified” checks consistency of the entries presented; it cannot prove completeness or rule out a full rewrite." />
               </h3>
               <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${preview.disclosure.integrity.verified ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" : "bg-red-50 text-red-700 ring-1 ring-red-200"}`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${preview.disclosure.integrity.verified ? "bg-emerald-500" : "bg-red-500"}`} />
