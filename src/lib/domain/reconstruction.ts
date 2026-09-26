@@ -52,8 +52,8 @@ export interface OpinionReconstruction {
   /**
    * Tamper-evidence over the FULL report chain (a single section's events are a
    * subset, not an independent chain, so they are verified in the context of the
-   * whole report). `verified` means the disclosed events are unaltered since
-   * recording — tamper-evident, not tamper-proof.
+   * whole report). `verified` means the presented entries link and hash
+   * correctly; it does not establish completeness or authorship.
    */
   integrity: { verified: boolean; note: string };
 }
@@ -112,8 +112,8 @@ export function reconstructOpinion(
   const integrity = {
     verified: chain.ok,
     note: chain.ok
-      ? "The audit chain backing this opinion verified as internally consistent and unaltered since recording."
-      : `Audit chain verification failed at event ${chain.brokenAt}: ${chain.reason ?? "unknown reason"}. This reconstruction may have been altered after recording.`,
+      ? "The presented audit chain backing this opinion passed an internal consistency check. That does not prove completeness, authorship, or the absence of a full rewrite."
+      : `The presented audit chain failed its internal consistency check at event ${chain.brokenAt}: ${chain.reason ?? "unknown reason"}. This check cannot determine the cause.`,
   };
 
   // A section with no model calls was rendered deterministically (e.g. from the

@@ -144,7 +144,7 @@ describe("shipping guard — grounding claims stay within what the checks prove"
       fs.readFile(path.join(APP, "terms", "page.tsx"), "utf8"),
     ]);
     expect(home).toMatch(/verify that\s+each source actually supports/i);
-    expect(workspace).toMatch(/not that the source proves it/i);
+    expect(workspace).toMatch(/review each cited source for actual support/i);
     expect(terms).toMatch(/does not establish that the source[\s\S]*actually supports/i);
   });
 });

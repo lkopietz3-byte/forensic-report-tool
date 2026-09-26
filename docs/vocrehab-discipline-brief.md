@@ -1,12 +1,12 @@
 # Vocational-Rehab Discipline Brief — for the design-partner conversation
 
-Research-backed briefing (fact-checked web research, 2026-07-03) so the founder can
-(a) verify Disclosed. is discipline-correct and (b) sound credible to a CRC/ABVE
-vocational-rehab expert. Pairs with `discovery/vocrehab-template-spec.md`.
+Desk-research briefing (2026-07-03) to prepare the founder for discipline
+validation with a practicing CRC/ABVE vocational-rehab expert. Pairs with
+`discovery/vocrehab-template-spec.md`.
 
-## Verdict: the product is discipline-SOUND on the fundamentals (and hardened past a deeper audit)
+## Desk-research assessment: fundamentals reviewed; practitioner validation pending
 
-An audit against the field's "coder-wandered-in" tells came back clean:
+A desk review checked these terminology and framing points:
 - Uses **"evaluee"** (not client/patient — in forensic work a CRC has NO client).
 - Attributes **RAPEL to Weed** (not McCroskey — McCroskey's system is **MVQS**, separate); getting this wrong "destroys credibility instantly."
 - **Neutral** framing — no advocacy language ("strengthen your case," "maximize").
@@ -14,13 +14,15 @@ An audit against the field's "coder-wandered-in" tells came back clean:
 - Correctly separates **earning capacity** (prospective ABILITY, a **range**) from **lost earnings** (retrospective wages), and **defers present-value to the economist**.
 
 **A second, deeper multi-agent audit (2026-07-03) went past the fundamentals and found five real credibility gaps — all now fixed:**
-1. The worked sample asserted a **labor-force-participation figure as a disability-category average**, mis-grounded to the physician's lifting restriction — i.e., the demo contained the exact ipse-dixit defect the product exists to prevent. → now deferred to `[Expert input needed]` (worklife source named, or hand off to the economist).
+1. The worked sample asserted a **labor-force-participation figure as a disability-category average**, mis-grounded to the physician's lifting restriction — an unsupported source relationship the ID check did not catch. → now deferred to `[Expert input needed]` (worklife source named, or hand off to the economist).
 2. The sample's TSA attributed **SVP/GED worker traits to O*NET**; only the **DOT** supplies them. → rewritten to name the DOT as the source and O*NET-SOC as the cross-walk target; a template coverage prompt now enforces it.
 3. The sample never stated the **evaluee's age** (load-bearing for a work-capacity opinion). → added.
 4. No **apportionment** prompt (pre-existing/coexisting condition vs. the work injury — the defense's standard opening). → added to `functional_capacity`.
 5. No **placeability** prompt (jobs *exist* ≠ this evaluee gets *hired*) and no **future-incapacity-needs-a-medical-anchor** guard (*Korbe*). → both added.
 
-Confidence is HIGH on the fundamentals and materially higher after these fixes. The honest limit is unchanged: it is **desk-research-validated, not expert-validated** — final methodology sign-off is exactly what the design partner is for (see open questions at the end).
+These fixes address the identified sample and prompt issues. The methodology is
+**desk-research-reviewed, not validated by a practicing expert**; the design
+partner still needs to assess it (see open questions at the end).
 
 ## Terminology & concepts you MUST get right
 
@@ -38,13 +40,13 @@ Confidence is HIGH on the fundamentals and materially higher after these fixes. 
 
 ## Case law to know BY NAME (experts and opposing counsel do)
 
-- **Elcock v. Kmart**, 233 F.3d 734 (3d Cir. 2000) — the seminal voc-rehab exclusion; a self-made "hybrid" method was excluded. Lesson: name a **recognized** method (RAPEL), don't invent one.
-- **Kohls v. Ellison** (2025) — an expert used ChatGPT; the report had **hallucinated citations** and his testimony was **excluded entirely**. THE cautionary tale — and precisely the risk Disclosed. neutralizes.
-- **Matter of Weber** (2025) — expert's LLM use scrutinized.
-- **Korbe v. Manchester** (D. Colo. 2024) — voc opinion **struck for lacking medical foundation** (restrictions must trace to a medical source).
-- **Kumho Tire / GE v. Joiner** — the **ipse dixit / "analytical gap"** doctrine: an opinion connected to data "only by the ipse dixit of the expert" is excludable. **Ipse dixit is the #1 exclusion ground.**
+- **Elcock v. Kmart**, 233 F.3d 734 (3d Cir. 2000) — admission of vocational testimony was vacated and remanded for a Daubert hearing; the court expressed no view on that hearing's outcome. Explain and substantiate the method and its application; a methodology label alone does not establish reliability. [Court opinion](https://www2.ca3.uscourts.gov/opinarch/987472.txt)
+- **Kohls v. Ellison** (D. Minn. Jan. 10, 2025) — fabricated citations undermined Hancock's declaration, which the court excluded when deciding the preliminary-injunction motion. Citation-ID checks alone cannot eliminate that risk. [Court opinion](https://www.govinfo.gov/content/pkg/USCOURTS-mnd-0_24-cv-03754/pdf/USCOURTS-mnd-0_24-cv-03754-0.pdf)
+- **Matter of Weber** (N.Y. Sur. Ct. 2024) — the court declined to credit unreliable damages calculations and separately criticized unexplained, unverified Copilot use. [Court opinion](https://www.nycourts.gov/REPORTER/3dseries/2024/2024_24258.htm)
+- **Korbe v. Manchester** (D. Colo. May 23, 2024) — the court excluded future lost-earning-capacity opinions lacking adequate medical predicates and reliable support, while admitting the expert's past wage-loss opinion. [Court opinion](https://www.govinfo.gov/content/pkg/USCOURTS-cod-1_23-cv-01145/pdf/USCOURTS-cod-1_23-cv-01145-0.pdf)
+- **Kumho Tire / GE v. Joiner** — the **ipse dixit / "analytical gap"** doctrine: an opinion connected to data "only by the ipse dixit of the expert" is excludable. The court must assess the support for the particular opinion; no ranking of exclusion grounds is established here.
 - **Dec 1, 2023 FRE 702 amendment** — proponent must show each element "more likely than not," and 702(d) now requires a **reliable APPLICATION** of the method.
-- **Proposed FRE 707** — would subject machine-generated evidence to the same 702/Daubert bar (why AI-disclosure matters now).
+- **Proposed FRE 707** — addresses reliability review for certain machine- or AI-generated evidence. It remains a rulemaking proposal; its scope and final text are unsettled. [Official committee materials](https://www.uscourts.gov/sites/default/files/document/2026-05_evidence_rules_agenda_book.pdf).
 
 ## Ethics (CRCC Code — experts live by this)
 
@@ -66,16 +68,16 @@ CRC (via CRCC) · **ABVE/F** (Fellow — 3 yrs forensic) · **ABVE/D** (Diplomat
 
 ## The killer questions an expert WILL ask — and your answers
 
-- **"Does it write my opinions?"** → No. It structures *your* findings; you author every word. It cannot originate a fact, number, or citation — closed-world grounding blocks it and the export **refuses** any ungrounded sentence.
-- **"Will it invent citations like the expert in Kohls?"** → It *can't*. It may only cite evidence you supplied; every factual sentence must trace to a source or it's flagged, and export is hard-blocked on any ungrounded/invalid cite.
-- **"If opposing counsel asks how I used AI, am I exposed?"** → That's the whole point: it produces a **tamper-evident AI-disclosure record** you can produce in discovery — and anyone (opposing counsel, the court) can **independently verify** it at `/verify`. You get ahead of the Kohls/FRE-707 risk.
-- **"Does it do the TSA / earning-capacity / restrictions for me?"** → No. You make every judgment (which occupations transfer, the capacity range, the adopted restrictions). It formats and runs a Rule-26 completeness check. (This is the hard guardrail in the spec.)
+- **"Does it write my opinions?"** → The tool produces a structured draft from your material. You must review its wording, sources, and opinions before adopting and signing it. The prompt tells the model to use supplied material, and export blocks uncited or unknown-ID sentences.
+- **"Will it invent citations like the expert in Kohls?"** → The export check rejects unknown citation IDs and uncited sentences, but a valid ID can still be attached to an invented or unsupported claim. You must verify each citation and statement.
+- **"If opposing counsel asks how I used AI, am I exposed?"** → The tool produces a **tamper-evident AI-disclosure record** you can review and produce if appropriate. A recipient can check the presented record's hash consistency at `/verify`; that check cannot prove the record is complete or who authored the report.
+- **"Does it do the TSA / earning-capacity / restrictions for me?"** → You remain responsible for those judgments (which occupations transfer, the capacity range, the adopted restrictions). It formats and runs a Rule-26 structural completeness check. Review the output before adopting it.
 - **"Is my case data trained on / safe?"** → No training on your data (Anthropic API default); described as commitments, not certifications (honest — no SOC 2 claimed).
 
 ## Strengths an expert would respect (lead with these)
 
-- **Closed-world grounding is the direct antidote to the #1 exclusion (ipse dixit) and to Kohls-style hallucination.** This is your strongest, most discipline-literate feature.
-- The **AI-disclosure record + `/verify`** gets ahead of the exact risk they fear (FRE 707, Kohls, discoverable AI methodology).
+- **Citation-ID checks catch missing and unknown citations.** They do not establish that a claim follows from the cited source; expert review is essential.
+- The **AI-disclosure record + `/verify`** provides an internally checkable record relevant to the risks they fear (FRE 707, Kohls, discoverable AI methodology).
 - The template is **RAPEL-correct and Rule-26-mapped**; the sample **defers PV to the economist** and expresses **capacity as a range**.
 
 ## Honest limits → the open questions for the design partner

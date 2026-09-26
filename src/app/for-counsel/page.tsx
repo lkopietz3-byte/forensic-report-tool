@@ -57,23 +57,25 @@ export default function ForCounselPage() {
             Courts are starting to treat your expert&apos;s AI use as your
             discovery problem too. In <em>Conservation Law Foundation v. Shell</em>{" "}
             (2026) a magistrate ordered an expert to produce the AI prompts behind
-            her work (the order is stayed under district-court review); in{" "}
-            <em>Kohls v. Ellison</em> (2025) a declaration was struck after
-            AI-hallucinated citations slipped through. When your expert uses
+            her work; in{" "}
+            <em>Kohls v. Ellison</em> (2025) a declaration was excluded for a
+            preliminary-injunction motion after
+            AI-hallucinated citations slipped through. Check the current docket
+            status of the <em>Conservation Law Foundation</em> order before relying
+            on it. When your expert uses
             Disclosed., the record of how AI was used is built as the report is
             written and travels with it — so it is in the file before opposing
             counsel or the court asks, rather than reconstructed under cross.
           </p>
         </div>
 
-        <Section heading="It organizes the expert's own findings. It does not originate them.">
+        <Section heading="It organizes the expert's material for their review.">
           <p>
-            The tool works only from the evidence the expert supplies, and does
-            not reach outside it for facts, figures, or citations. Every factual
-            sentence must carry a citation to a source the expert provided, and
-            export is blocked on any sentence that cannot be tied to one. That
-            check confirms a sentence points to a real supplied source. It does
-            not confirm the source proves the statement, so verifying that the
+            The drafting path has no web or research tools and instructs the model
+            to use the expert&apos;s supplied material. Every factual sentence must
+            carry a citation ID from the supplied evidence list; missing or unknown
+            IDs block export. That check confirms an ID is present in the list. It
+            cannot confirm the source supports the statement, so verifying that the
             evidence actually supports each sentence, and that any calculation or
             inference is sound, stays with the expert (Fed. R. Evid. 702). The
             expert reviews, edits, independently verifies, adopts, and signs.
@@ -83,11 +85,11 @@ export default function ForCounselPage() {
         <Section heading="Every report carries an AI-Use Disclosure record">
           <p>
             If any section was assisted by an AI model, the report includes an
-            appendix that discloses each AI-assisted section, the model and
-            version used, and the exact evidence the tool was given for it. The
-            record is generated automatically from a tamper-evident log (each
-            entry is cryptographically linked to the one before it, so a later
-            edit or deletion can be detected). If a section used no AI, the
+            appendix that lists each AI-assisted section, the model and
+            version used, and the IDs of evidence items supplied for it. The
+            record is generated from a hash-chained log: an isolated edit or
+            deletion within the presented chain breaks verification unless the
+            chain is recomputed. If no AI use is recorded for a section, the
             disclosure says so.
           </p>
           <p>
@@ -97,8 +99,8 @@ export default function ForCounselPage() {
           </p>
           <p>
             That record can be checked independently. If the expert provides the
-            disclosure manifest, anyone (including opposing counsel) can confirm
-            it was not altered after it was made at{" "}
+            disclosure manifest, anyone (including opposing counsel) can check
+            the internal consistency of its presented entries at{" "}
             <a
               href="/verify"
               className="font-medium text-blue-800 underline-offset-2 hover:underline"

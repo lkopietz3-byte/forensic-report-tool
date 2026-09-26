@@ -4,7 +4,7 @@
 > **You are a builder, not a vocational expert** — ask, don't assert; never fake a
 > credential; your value is the tool + listening. Methodology below is **draft
 > desk-research, not expert-validated.** Case summaries are **not legal advice;
-> verify the reporter; CLF v. Shell is non-final and may change.**
+> verify the reporter; recheck CLF v. Shell docket status before citing.**
 
 ---
 
@@ -20,6 +20,9 @@
 
 ## The 6 Rule 26(a)(2)(B) report elements
 
+Generally required for retained testifying experts in federal civil litigation,
+unless otherwise stipulated or ordered. [Official rule](https://www.uscourts.gov/sites/default/files/document/federal-rules-of-civil-procedure.pdf).
+
 1. **(i)** All **opinions** + the **basis and reasons** for them.
 2. **(ii)** The **facts or data** the expert considered.
 3. **(iii)** Any **exhibits** used to summarize or support the opinions.
@@ -34,11 +37,11 @@
 
 | Case (court, date) | One line | Result |
 | --- | --- | --- |
-| **Kohls v. Ellison** (D. Minn., Jan 10 2025) | Expert let GPT-4o **fill in citations**; it fabricated sources — "shatter[ed] his credibility." | Declaration **struck.** |
+| **Kohls v. Ellison** (D. Minn., Jan 10 2025) | Expert let GPT-4o **fill in citations**; it fabricated sources — "shatter[ed] his credibility." | Declaration excluded **on the preliminary-injunction motion.** |
 | **Concord Music Group v. Anthropic** (N.D. Cal., May 2025) | Real journal but **AI-invented title/authors** — "a world of difference between a missed citation and a hallucination." | Paragraph **struck.** |
-| **Matter of Weber** (N.Y. Sur. Ct., 2024) | Expert used a chatbot to **"check" valuation math**, couldn't recall prompts or explain method. | Valuation **unreliable.** |
-| **Ferlito v. Harbor Freight** (E.D.N.Y., Apr 2025) | **Safe harbor:** expert drafted independently, used AI only to **confirm** conclusions already reached. | Testimony **allowed.** |
-| **Conservation Law Foundation v. Shell Oil** (D. Conn.) | Magistrate: AI **prompts are discoverable Rule-26 methodology.** | **NON-FINAL** — objected under Rule 72(a), stayed, **may change.** Always say so. |
+| **Matter of Weber** (N.Y. Sur. Ct., 2024) | Court found damages calculations unreliable and separately criticized unexplained Copilot use. | Declined to credit calculations; **multiple reliability defects.** |
+| **Ferlito v. Harbor Freight** (E.D.N.Y., Apr 2025) | Expert used AI after writing the report to confirm independent findings. | Exclusion denied on these facts; **no general safe harbor.** |
+| **Conservation Law Foundation v. Shell Oil** (D. Conn., May 18, 2026) | CLF ordered to revise responses and produce responsive expert-team prompts/queries, or certify none existed after diligent search. | June 3 stay reported; **current status not independently verified September 26, 2026.** Check docket before citing. |
 
 > **The contrast that *is* the pitch:** the experts who got hurt let a tool
 > **originate** something they couldn't account for; the one who was fine kept his
@@ -89,7 +92,7 @@
 7. "RAPEL is **peer-reviewed**, so the Daubert attack usually isn't 'RAPEL is junk' — it's 'you didn't *do* a step rigorously for this person.'"
 8. "Where does the **economist hand-off** sit — do you stop at the range and let them do present value?"
 9. "The tool **structures your own findings** and records how AI was used. Its prompt is restricted to supplied evidence, source IDs are checked, and you verify, prepare, adopt, and sign."
-10. "On **CLF v. Shell** — I know it's a **non-final magistrate order under Rule 72(a) review**, so a signal of direction, not settled law."
+10. "On **CLF v. Shell** — the May 18 order was fact-specific. A June 3 stay was reported; I need to verify the current docket status before relying on it."
 
 ## 5 tells that mark you as a poser — avoid
 
@@ -111,3 +114,5 @@
 > **Every legal/methodology statement carries its caveat.** General information, not
 > legal advice. Disclosed. is a software company, not a law firm. Verify the rules for
 > the relevant jurisdiction.
+
+Case scope and primary sources: [case-law reference](00-content-brief.md#case-law--use-only-these-with-this-framing-and-these-caveats).

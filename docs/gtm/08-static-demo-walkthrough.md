@@ -18,8 +18,8 @@ Subject: Disclosed. — the walkthrough I mentioned
 
 Attached is a short walkthrough of Disclosed., the tool I described. The one thing I'd
 ask you to look at first is frame 4 — the refusal. That's the whole product in one
-screenshot: a sentence with a fabricated citation gets blocked, not warned, before
-anything can reach a file. The disclosure appendix in frame 9 is the second thing worth
+screenshot: a sentence with an unknown citation ID gets blocked before
+export. The disclosure appendix in frame 9 is the second thing worth
 your time.
 
 I'm looking for two or three vocational-rehabilitation practitioners to red-team the
@@ -45,14 +45,14 @@ for your jurisdiction.*
 
 **Caption:** The workspace opens with the always-on grounding pulse at the top — a live statement of which sources the tool has access to. Nothing else.
 
-**Why it matters:** Sets the frame before a single fact is in play: the tool knows only what the expert gave it.
+**Why it matters:** Sets the frame before a single fact is in play: the evidence list shows what the expert supplied to this draft.
 
 ---
 
 ### Frame 2
 **[screenshot: `/workspace` — section 2 "Your evidence," zoomed to show 3–4 filled evidence items with their numbered chips (blue), content text, source/location fields, and section-tag dropdowns. The paste-and-extract area above should be visible but not the focus.]**
 
-**Caption:** Each piece of evidence gets a number. Every factual sentence in the report will cite back to one of these — nothing else.
+**Caption:** Each piece of evidence gets a number. Report sentences must cite IDs from this evidence list before export; the expert checks whether those sources support the claims.
 
 **Why it matters:** Shows that the evidence list is the expert's own record, not a database the tool reaches into independently.
 
@@ -70,9 +70,9 @@ for your jurisdiction.*
 ### Frame 4 — THE REFUSAL (most important frame)
 **[screenshot: the homepage TryItDemo widget at `/#try-it` — "A made-up citation" preset selected. The textarea shows the sentence with `[[E:E9]]`. The right-hand sidebar "The only sources it has" shows three sources (E1, E2, E3). The verdict box reads "Export blocked — 1 sentence cites no source you supplied." The red "?" citation chip is visible inline with the sentence text.]**
 
-**Caption:** A citation to a source that doesn't exist — E9 — is immediately flagged. Export stays blocked. This is the same check Kohls v. Ellison (D. Minn., Jan 2025) illustrated when a court struck an expert declaration for AI-fabricated citations.
+**Caption:** A citation to a source that doesn't exist — E9 — is immediately flagged. Export stays blocked. This check catches unknown IDs; the expert must still inspect valid citations for unsupported claims.
 
-**Why it matters:** This is the existential feature. The architecture cannot produce a fabricated citation; it can only cite what the expert supplied.
+**Why it matters:** This is the existential feature. The export gate blocks unknown citation IDs but cannot detect an unsupported claim attached to a valid ID.
 
 *[Note: include the Kohls reference only with the caveat "summaries, not legal advice; verify against the official reporter."]*
 
@@ -81,7 +81,7 @@ for your jurisdiction.*
 ### Frame 5 — Cleared and ready
 **[screenshot: the homepage TryItDemo widget — "A properly cited sentence" preset selected. The textarea shows the sentence citing `[[E:E2]]`. The verdict box is green: "Ready to export — every sentence cites a source you supplied." The citation chip renders as a blue "2" superscript.]**
 
-**Caption:** Cite a real source — one in your case file — and the sentence clears. Green means ready to export.
+**Caption:** Cite a real source — one in your case file — and the sentence clears. Green means the citation-ID check passed; the expert still reviews the source relationship.
 
 **Why it matters:** Shows the path forward is simple: cite your evidence, and the gate opens. No workaround is needed; correct practice is rewarded.
 
@@ -99,9 +99,9 @@ for your jurisdiction.*
 ### Frame 7 — Live grounding in the editor
 **[screenshot: `/workspace` — one section in edit mode, the LiveGrounding component visible below the textarea. The textarea should contain a mix: one sentence with a valid citation (green dot), one sentence without a citation (red dot). The citation-insert buttons (`[[E:E1]]`, `[[E:E2]]`, etc.) should be visible above the grounding widget. The "Save & re-check" and "Revert to draft" buttons should be visible.]**
 
-**Caption:** While editing a section, every sentence is checked in real time. A red dot means the sentence needs a citation before it can be saved.
+**Caption:** While editing a section, citation IDs are checked in real time. A red dot means the sentence needs a valid citation before export.
 
-**Why it matters:** The expert cannot save an uncited sentence into the report by accident — the check is live, not deferred.
+**Why it matters:** The expert sees an uncited sentence immediately, and the export gate blocks it if left unresolved.
 
 ---
 
@@ -117,9 +117,9 @@ for your jurisdiction.*
 ### Frame 9 — The AI-Disclosure Appendix (in-app preview or sample page)
 **[screenshot: the dark AI-Disclosure Appendix section at `/sample`, showing the table with columns "Section," "Model · version," and "Evidence provided." Three or four rows should be visible. The "Generated from the disclosure record" badge in the header should be visible. The italic note at the bottom about profile sections should be visible.]**
 
-**Caption:** The appendix in the export: each AI-assisted section, the model and version, and the evidence it was given — and nothing it was not given.
+**Caption:** The appendix in the export: each AI-assisted section, the model and version, and the evidence IDs recorded as supplied to the model.
 
-**Why it matters:** This is the discoverable methodology record. If counsel asks how AI was used, the expert has a documented, hash-chained answer, not a best-guess recollection.
+**Why it matters:** This is the discoverable methodology record. If counsel asks how AI was used, the expert has a documented, hash-chained account of recorded activity to review alongside other evidence.
 
 ---
 
@@ -163,21 +163,21 @@ for your jurisdiction.*
 Rule 26(a)(2)(B)-organized report and keeps an automatic, tamper-evident record of how AI
 was used. The expert independently verifies, prepares, adopts, and signs.
 
-**The one invariant.** Every factual sentence must cite a source the expert supplied, or
-the tool refuses to let it into a report. That check is not a setting and not a
-post-export review — it runs on every sentence, every build, every save, and it hard-blocks
-the export if anything fails. A sentence citing a source the expert did not supply is
-treated the same as an uncited sentence: blocked.
+**The one invariant.** Report sentences must cite an ID from the expert-supplied
+set before export. The editor displays the citation-ID check, and the export
+route runs it again and blocks uncited or unknown-ID sentences. A valid ID still
+needs expert review for actual source support.
 
-**The disclosure record.** A tamper-evident, append-only, hash-chained audit log records
-each AI-assisted section, the model and version, and exactly the evidence it was given.
+**The disclosure record.** A tamper-evident, append-only, hash-chained audit log
+contains AI-assisted sections, model and version, and evidence IDs logged as supplied.
 This composes the AI-Disclosure Appendix in the export — a documented methodology record,
 not a retroactive summary.
 
-**What it is not.** The tool does not originate facts, opinions, numeric ranges, or
-conclusions. It does not decide what earning capacity is, what the labor market supports,
-or what restrictions the evaluee has. Those are the expert's opinions; the tool arranges
-and cites them. Admissibility is always the court's determination.
+**What it is not.** The tool is designed to avoid originating facts, opinions,
+numeric ranges, or conclusions; citation-ID checks alone cannot guarantee that.
+It does not determine earning capacity, labor-market support, or the evaluee's
+restrictions. The expert must make those judgments; the tool arranges draft text
+and marks citations for expert verification. Admissibility is the court's call.
 
 **Court formatting.** Exports include continuous line numbers, Century Schoolbook font,
 and cover formatting standard in federal expert reports. Word (.docx) and PDF, one credit.

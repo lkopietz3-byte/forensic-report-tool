@@ -85,7 +85,7 @@ describe("sample report — disclosure is a faithful projection", () => {
     expect(s).not.toMatch(/closed-world/i); // jargon must stay out of the filed statement
     expect(s).toMatch(/restrict the model to the evidence the expert supplied/i);
     expect(s).toMatch(/does not independently prove[\s\S]*supports the sentence/i);
-    expect(s).toMatch(/solely responsible/i);
+    expect(s).toMatch(/expert is responsible for reviewing, verifying/i);
   });
 });
 

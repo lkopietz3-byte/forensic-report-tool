@@ -52,14 +52,16 @@ self-serve populations, acute paid pain.
 
 ## 3. Messaging pillars (in priority order)
 
-1. **You verify, prepare, adopt, and sign.** AI structures; you remain responsible. Every factual
-   sentence traces to a source you supplied, or the tool flags the gap and asks
-   you — it never fills it in. *(Defeats the #1 bounce: "AI-authored reports are
+1. **You verify, prepare, adopt, and sign.** AI structures; you remain responsible.
+   Export blocks missing or unknown citation IDs, while you verify that each
+   source supports the claim. The prompt asks the model to surface gaps for
+   your input. *(Addresses the #1 bounce: "AI-authored reports are
    unethical / cross-exam-fatal.")*
 2. **The disclosure record courts are starting to ask for.** Append-only,
-   tamper-evident audit log → a court-ready AI-Disclosure Appendix recording each
-   AI-assisted section, the model/version, and the evidence it was given — and
-   nothing it was not. *(The moat and the headline.)*
+   tamper-evident audit log → an AI-Disclosure Appendix summarizing recorded
+   AI-assisted sections, model/version, and evidence IDs supplied to the model.
+   The hash check covers the presented chain, not completeness or authorship.
+   *(The moat and the headline.)*
 3. **Using AI is permitted; what's required is disclosure + ownership.** Lead
    with permission and the fix, not the threat. Reference ABA Formal Op. 512 and
    the 2026 discovery rulings factually, with the "not legal advice" caveat.
@@ -104,8 +106,9 @@ recruitment.** From the conversion audit (`audit/18`), in priority:
   report** to a distinct secondary CTA — a real output beats any copy for this
   audience.
 - **Add a "Cross-Exam Ready" Q&A band** (the single highest-value addition):
-  - "Did AI write your report?" → it's structured, not written by a computer; the
-    appendix proves exactly how it was used.
+  - "Did AI write your report?" → AI may produce draft wording; the expert must
+    review, revise, and adopt it. The appendix presents recorded AI activity,
+    not proof of completeness or authorship.
   - "Are those citations real?" → closed-world grounding; every cite resolves to
     a source you supplied or it's flagged.
   - "Is this methodology / discoverable?" → yes, and the appendix is built for

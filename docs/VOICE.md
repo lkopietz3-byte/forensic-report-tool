@@ -33,9 +33,9 @@ the expense of clear, or salesy.
 | Who authors | **the expert prepares, adopts, and signs** | we wrote, the AI wrote, our report | Rule 26 uses “prepared and signed by the witness”; the product does not make a legal authorship determination. |
 | Rule 26 relationship | **Rule 26(a)(2)(B)-structured**, **organized to the Rule 26(a)(2)(B) format**, **tracks every Rule 26 element** | Rule 26-compliant, compliant, guaranteed compliant | Compliance is a legal conclusion, not ours to assert. |
 | Court outcome | **designed to support**, **discloses**, **prepared for disclosure** | court-defensible, admissible, will hold up in court | Admissibility is always the court's determination. |
-| The audit chain | **tamper-evident**, **append-only**, **hash-chained** | tamper-proof, immutable, unhackable | We can detect tampering, not prevent it. |
+| The audit chain | **tamper-evident**, **append-only**, **hash-chained** | tamper-proof, immutable, unhackable, complete record | Hash verification checks the presented record for internal consistency; it cannot prove completeness or authorship. |
 | Data handling | **commitment / intent to** not train on customer data; **zero-retention path** (with the caveat below) | we are SOC 2, we have a signed zero-retention contract, your data is 100% secure | We don't hold certs/contracts yet. State intent, not fact. |
-| Grounding | **traced to a source you supplied**, **evidence-grounded**, **flags the gap** | fact-checked, verified true, accurate | We verify a sentence traces to supplied evidence — not that it is true. |
+| Grounding | **cites a supplied evidence ID**, **flags missing or unknown IDs** | fact-checked, verified true, accurate, source-proven | The automated check validates citation IDs, not whether the source supports the sentence. The expert checks that relationship. |
 | Time savings | **the time this targets**, **experts in our design cohort report…** | saves you 3–5 hours (bare), guaranteed faster | Pre-launch; no measured outcome. Attribute the estimate. |
 | Competitor framing | name the gap factually | "the only", "the best", disparagement | Conservative audience punishes hype. |
 
@@ -91,8 +91,8 @@ produces report content.
 | --- | --- | --- |
 | How-it-works step | "We draft from your findings" | "Your findings become a structured draft" |
 | Guardrails heading | "Built so it can't embarrass you" | "Designed to keep review, adoption, and signature with the expert" |
-| Disclosure body | "we produce a court-ready appendix" | "Disclosed. produces an appendix that records each AI-assisted section, the model and version, and the evidence it was given — and nothing it was not given" |
-| Footer | "We structure your findings and prove how" | "You author and sign every report. We structure your findings and document how." |
+| Disclosure body | "we produce a court-ready appendix" | "Disclosed. produces an appendix that summarizes the recorded AI-assisted sections, model and version, and evidence IDs supplied to the model" |
+| Footer | "We structure your findings and prove how" | "You review, adopt, and sign each report. The tool structures your findings and records its AI assistance." |
 | Metadata title | "Court-Defensible Expert Reports" | "Disclosed. — Expert-Witness Reports with Built-In AI Disclosure" |
 
 ---
@@ -139,6 +139,9 @@ produces report content.
       citation? (If yes — rewrite. This is the existential one.)
 - [ ] Is "we" the actor producing report content? (If yes — make the tool the
       instrument and the expert the author.)
+- [ ] Any claim that a valid citation ID proves factual support, or that a valid
+      audit chain proves completeness or authorship? (Add expert review and the
+      check's actual scope.)
 - [ ] Any guarantee of admissibility/compliance/court outcome? (Replace with
       "structured / designed to support / discloses.")
 - [ ] "tamper-proof / immutable" anywhere? (→ "tamper-evident / append-only.")

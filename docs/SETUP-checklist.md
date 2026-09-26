@@ -151,7 +151,7 @@ want any of them:
 
 
 - **Uploaded-file storage.** Intake parses files **in the browser** and never uploads them (a feature, for confidentiality). If you ever want server-side retention of source docs, that's a Supabase Storage + RLS task.
-- **In-place report editing.** Each Save writes a new immutable snapshot (so the per-report audit chain is never mutated). "Update this report" vs. "save a new version" is a product decision, not built yet.
+- **In-place report editing.** The current app flow creates a new report row on Save. Owner database policies still permit report updates/deletes, so this is not an immutability guarantee. "Update this report" vs. "save a new version" is a product decision, not built yet.
 - **Stripe → email/receipt customization, tax, proration** — all default Stripe behavior today.
 
 ---

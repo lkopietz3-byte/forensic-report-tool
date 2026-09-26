@@ -38,9 +38,8 @@ const HTML_EXTENSIONS = [".html", ".htm", ".xhtml"];
 const IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".tif", ".tiff"];
 // OOXML spreadsheets only. Legacy binary .xls/.xlsb are handled as "legacy"
 // (declined with a "save as .xlsx" message) — see classifyUpload. We read these
-// with read-excel-file, a maintained dependency-free reader; the old npm
-// `xlsx`/SheetJS build (which could read .xls) is unmaintained on npm and carried
-// unpatched advisories, so it was removed.
+// with read-excel-file; its package and transitive dependencies still require
+// normal security review. The old npm `xlsx`/SheetJS build was removed.
 const SPREADSHEET_EXTENSIONS = [".xlsx", ".xlsm"];
 
 /** Bound how many pages of a scanned PDF we OCR, so one upload can't run for minutes. */
@@ -207,10 +206,9 @@ export function sheetsToText(
   return parts.join("\n\n");
 }
 
-// Spreadsheets → text via read-excel-file — a maintained, dependency-free,
-// browser-side OOXML reader. (We moved off the npm `xlsx`/SheetJS build, which is
-// unmaintained on npm and carried unpatched prototype-pollution/ReDoS advisories;
-// read-excel-file pulls in zero transitive dependencies.) Each sheet becomes CSV;
+// Spreadsheets → text via read-excel-file/browser. Its browser entry uses the
+// native DOMParser, while its npm package still has transitive dependencies.
+// Each sheet becomes CSV;
 // multi-sheet workbooks are headed by the sheet name. Only OOXML .xlsx/.xlsm are
 // read; legacy binary .xls/.xlsb are declined upstream. The expert still reviews
 // every cell downstream.

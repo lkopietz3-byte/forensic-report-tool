@@ -2,6 +2,15 @@
 
 **Scope:** Does the product's framing protect the expert from an ethics/credibility attack on cross-examination, or does copy/UX create ammunition for opposing counsel? Covers ABVE, CRC/CRCC, and IARP codes; general expert-witness norms; the permissible drafting-assistance vs. impermissible opinion-origination line; ghostwriting; and deposition-safe positioning.
 
+**Correction (2026-09-26):** This historical audit and its proposed deposition
+language remain as originally written, not as a current script or attestation.
+The tool checks citation IDs, not whether sources substantively support claims.
+Model output can contain unsupported or opinion-like wording despite the prompt;
+only the expert can verify what they actually reviewed, changed, and adopted.
+The disclosure log shows recorded events but cannot prove completeness or
+authorship. Do not repeat the proposed sworn statement unless each assertion
+is independently true for the specific report.
+
 ---
 
 ## Issues

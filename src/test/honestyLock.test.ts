@@ -19,13 +19,13 @@ describe("disclosure statement honesty lock", () => {
 
   it("attributes authorship and responsibility to the expert (both modes)", () => {
     for (const s of [noAi.statement, withAi().statement]) {
-      expect(s).toContain("expert reviewed, verified, edited, and adopted");
-      expect(s).toContain("solely responsible");
+      expect(s).toContain("expert is responsible for reviewing, verifying");
+      expect(s).not.toContain("expert reviewed, verified, edited, and adopted");
     }
   });
 
   it("states the evidence restriction in plain language, not the term of art", () => {
-    expect(noAi.statement).toContain("only the evidence the expert supplied");
+    expect(noAi.statement).toContain("expert-supplied material");
     expect(withAi().statement).toContain(
       "restrict the model to the evidence the expert supplied",
     );
@@ -41,7 +41,7 @@ describe("disclosure statement honesty lock", () => {
   });
 
   it("the NO-AI statement does not claim AI assistance that did not happen", () => {
-    expect(noAi.statement).toMatch(/no generative AI model produced any text/i);
+    expect(noAi.statement).toMatch(/no generative model call appears in this report's assembly log/i);
     expect(noAi.statement).not.toMatch(/assistance of an AI/i);
   });
 
@@ -60,5 +60,7 @@ describe("disclosure statement honesty lock", () => {
   it("the integrity note says tamper-EVIDENT semantics, never tamper-proof or hash jargon", () => {
     expect(noAi.integrity.note).not.toMatch(/tamper-?proof/i);
     expect(noAi.integrity.note).not.toMatch(/hash-?chain/i);
+    expect(noAi.integrity.note).toMatch(/does not prove completeness, authorship/i);
+    expect(noAi.integrity.note).not.toMatch(/unaltered since it was recorded/i);
   });
 });

@@ -1,10 +1,11 @@
 # Disclosure-manifest verification spec
 
-Disclosed. produces, for every report, an **AI-disclosure manifest**: an
-append-only, hash-chained record of how AI was used. This document specifies the
-exact algorithm so the manifest can be verified **independently** — by opposing
-counsel, a court, the expert, or any third party — without an account, without
-calling our servers, and without trusting us.
+Disclosed. produces an **AI-disclosure manifest** with a hash-chained record of
+the AI events captured for a report. This document specifies the algorithm for
+checking the **presented manifest's internal consistency** independently — by
+opposing counsel, a court, the expert, or any third party — without an account
+or a call to our servers. That check cannot establish that every relevant event
+was recorded, that the underlying statements are true, or who authored them.
 
 A reference implementation is in
 [`src/lib/domain/verifyManifest.ts`](../src/lib/domain/verifyManifest.ts) and the
@@ -72,12 +73,12 @@ If the walk completes, the chain is intact.
 
 ## What a pass does and does not mean
 
-A pass is **tamper-evident**: it proves the events presented are internally
-consistent and unaltered since they were hashed, and that none was inserted,
-removed, or reordered. It does **not**, on its own, prove that no one with write
-access to the original store ever rewrote the entire chain from its first entry —
-that is the limit of any self-contained hash chain. And whether any disclosure
-satisfies a given court's requirements is always the court's determination.
+A pass means the events **presented** have a consistent sequence of hashes. It
+does not prove the record is complete or anchored to an earlier trusted copy:
+someone with full write access could rewrite the chain, or omit events at the
+end, and produce another internally consistent manifest. It also does not prove
+the accuracy of an event's content or who authored a report. Whether a
+disclosure satisfies a court's requirements is for the court to determine.
 
 ## Reference (JavaScript, Web Crypto)
 

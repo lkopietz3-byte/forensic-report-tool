@@ -183,7 +183,7 @@ const STATS = [
 const FAQ = [
   {
     q: "If my AI use is questioned, what's my answer?",
-    a: "It's already documented. The AI-Disclosure Appendix is part of your report: every AI-assisted section, the model and version, and the exact evidence the tool was given. If the question comes up through retaining counsel, discovery, or cross-examination, the record exists and travels with the report instead of being reconstructed from memory months later. In Conservation Law Foundation v. Shell (2026), a magistrate ordered production of prompts used in an expert's document-review methodology. That order is stayed under district-court review, so it is a live warning, not settled law.",
+    a: "The AI-Disclosure Appendix records each AI-assisted section, the model and version, and the IDs of evidence items supplied. Keep the disclosure manifest with the case file so counsel can assess its contents and hash-chain consistency if questions arise. In Conservation Law Foundation v. Shell (2026), a magistrate ordered production of prompts used in an expert's document-review methodology. Check the current docket status of that order before relying on it; it is not settled law.",
   },
   {
     q: "Does using this make my report inadmissible?",
@@ -195,7 +195,7 @@ const FAQ = [
   },
   {
     q: "Do I have to use AI at all?",
-    a: "No. A no-AI mode formats and citation-checks your report with a fixed, rule-based engine. No model writes a word. You get the same structure, the same “every sentence cites your evidence” guardrail, and a disclosure that states plainly that no AI produced any text. Turn on AI assistance only where you want it.",
+    a: "No. No-AI mode formats and citation-checks your report with a fixed, rule-based engine and no model call from this tool. You get the same structure and citation guardrail. The disclosure records that no generative model call appears in the report assembly log; review any outside text separately. Turn on AI assistance only where you want it.",
   },
   {
     q: "What if the tool gets a fact wrong?",
@@ -287,7 +287,7 @@ function ReportPreview() {
             </div>
             <div className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800">
               <CheckIcon className="h-3.5 w-3.5" />
-              Every sentence traces to a source you supplied
+              Cited IDs match your supplied evidence list
             </div>
           </div>
           <div className="border-t border-slate-100 bg-slate-50/60 p-5 text-left sm:border-l sm:border-t-0">
@@ -316,8 +316,8 @@ function ReportPreview() {
         </div>
       </div>
       <p className="mt-3 text-center text-xs text-slate-500">
-        Straight from the sample export: grounded sentences cited to your
-        evidence, with the open items the tool refuses to fill in for you.
+        Straight from the sample export: citation IDs checked against your
+        evidence list, with open items for you to review and resolve.
       </p>
     </div>
   );
@@ -709,11 +709,11 @@ export default function Home() {
                 In <em>Conservation Law Foundation v. Shell</em> (2026), a federal
                 magistrate judge ordered an expert to produce the AI prompts she
                 had used to narrow a large document production, treating them as
-                discoverable rather than protected notes (the order is now under
-                district-court review). In{" "}
-                <em>Kohls v. Ellison</em> (2025), an expert declaration was struck
-                after AI-hallucinated citations slipped through. The decisions
-                are fact-specific, and the Shell order is stayed under review,
+                discoverable rather than protected notes. Check the current docket
+                status before relying on that order. In{" "}
+                <em>Kohls v. Ellison</em> (2025), an expert declaration was excluded
+                for a preliminary-injunction motion after AI-hallucinated citations
+                slipped through. The decisions are fact-specific,
                 but they make one risk practical: an expert may be asked to
                 explain how AI touched the work.
               </p>

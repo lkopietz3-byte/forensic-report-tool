@@ -10,11 +10,10 @@ Legal-adjacent references end with the not-legal-advice caveat.
 
 Disclosed. structures a forensic expert's own findings into a Rule
 26(a)(2)(B)-organized report, and builds an automatic, tamper-evident record of
-how AI was used — each AI-assisted section, the model and version, and exactly
-the evidence it was given, and nothing it was not. By design the tool cannot
-introduce a fact, figure, opinion, or citation the expert did not supply; anything
-ungrounded is flagged and export is blocked until the expert resolves it. The
-expert independently verifies, reviews, adopts, and signs.
+how AI was used — the AI-assisted sections, model and version, and evidence IDs
+recorded as supplied. Export blocks missing and unknown citation IDs; an allowed
+ID does not establish factual support, so the expert checks each claim and source.
+The expert independently verifies, reviews, adopts, and signs.
 The disclosure layer is built for the moment a court or opposing counsel asks
 how AI was used in the preparation of the report.
 
@@ -25,7 +24,7 @@ how AI was used in the preparation of the report.
 These are options for testing — choose one; do not mix or stack.
 None makes a court-outcome or admissibility claim.
 
-1. **Your findings. Your signature. Every AI step documented.**
+1. **Your findings. Your signature. AI activity recorded.**
 2. **Structure your findings. Disclose your method. Stay the author.**
 3. **The AI-disclosure record courts are starting to ask for.**
 4. **Organized by the tool. Authored by you. Disclosed to anyone who asks.**
@@ -59,22 +58,21 @@ preparation."
 ### 2-minute (design-partner call, demo intro, conference one-on-one)
 
 "The problem I'm solving is one that keeps coming up in 2025 and 2026 caselaw.
-Experts who used AI in their reports are getting struck — not because AI is
-banned, but because the tool introduced something the expert didn't supply and
-couldn't verify, or the expert couldn't reconstruct what they gave the tool
-and what came back. *Ferlito v. Harbor Freight* is the contrast: that expert
-kept his own judgment in the chair, used AI only to confirm conclusions he'd
-already reached, and his testimony was allowed. The pattern the courts are
-pointing to is: AI in a supporting role the expert can fully account for.
+Courts have addressed fabricated citations, unreliable calculations, and discovery
+of AI-assisted methodology, with different remedies on different facts. In
+*Ferlito v. Harbor Freight*, the court found no reliability problem from an
+expert's use of AI after writing his report to confirm independent findings.
+The court also assessed his qualifications and methodology. That ruling does
+not establish a general safe harbor or validate this product.
 
 Disclosed. is built around that pattern. You supply your findings — your
 notes, your data, your analysis — and the tool structures and assembles them
-into a Rule 26(a)(2)(B) report. By design it cannot introduce a fact, number,
-or citation you didn't give it; anything ungrounded gets flagged and export is
-blocked until you resolve it. That's the closed-world rule, not a preference.
+into a Rule 26(a)(2)(B) report. Its prompt limits generation to your material,
+and export blocks missing or unknown citation IDs. You still check every claim
+against its source. That's the closed-world rule, not a preference.
 
-The part I think matters most is the disclosure record. Every AI-assisted
-section is logged — the model and version, the exact evidence you gave it —
+The part I think matters most is the disclosure record. AI-assisted sections are
+logged — the model and version, and evidence IDs recorded as supplied —
 in an append-only, tamper-evident chain. That record becomes an AI-Disclosure
 Appendix in the export, the kind of methodology record that, if your AI use
 comes up in discovery or on cross, you can produce rather than reconstruct.
@@ -85,8 +83,7 @@ The first report is free. I'm building this with a handful of design partners
 right now, and I'd like to understand your workflow before I finalize the
 template for your discipline."
 
-[Note: replace the Ferlito reference with the not-legal-advice caveat in written
-form — see social content and one-pager templates below.]
+[Case summaries are general information, not legal advice. See the [case summaries and court sources](00-content-brief.md#case-law--use-only-these-with-this-framing-and-these-caveats); preserve procedural limits in written versions.]
 
 ---
 
@@ -96,10 +93,10 @@ form — see social content and one-pager templates below.]
 
 Lead with pillar 1 (you stay the author) then pillar 2 (the disclosure record):
 
-"The tool structures and assembles your own findings — it never writes your
-opinions. Every sentence traces to a source you supplied, or it's flagged. You
-review and sign. What's different is the AI-disclosure record: it logs each
-AI-assisted section, the model, and exactly what evidence you gave it, and
+"The tool structures and assembles your own findings for your review. Missing or
+unknown citation IDs are flagged; you check whether each source supports the
+claim. You review and sign. What's different is the AI-disclosure record: it logs
+AI-assisted sections, the model, and evidence IDs recorded as supplied, and
 turns that into an appendix you can produce if the question ever comes up.
 Report drafting is time you often can't bill; the structure speeds that part
 without touching the analysis."
@@ -113,9 +110,9 @@ the grounding:
 contemporaneous record of each AI-assisted section, the model and version, and
 the evidence it was given. If AI use comes up in discovery or on cross,
 the expert has a methodology record they can produce rather than reconstruct.
-The tool also enforces closed-world grounding: it cannot introduce a fact,
-figure, or citation the expert did not supply. Admissibility is the court's
-call; this is designed to support a methodology the expert can stand behind
+The tool also checks citation IDs at export; the expert verifies substantive
+support. Admissibility is the court's call; this is designed to support a
+methodology the expert can stand behind
 and account for. *General information, not legal advice; verify with counsel
 for your jurisdiction.*"
 
@@ -133,14 +130,14 @@ happy to show you the disclosure appendix if you're curious."
 
 I'm a solo builder, not a credentialed forensic expert. What I am is someone
 who followed the 2025–2026 caselaw on AI and expert witnesses closely and
-noticed the same pattern in every case that went wrong: the expert let a tool
-do something they couldn't account for. The cases where experts were fine had
-one thing in common — the expert stayed in the chair and could show their work.
+saw practical reasons to verify sources and document how a tool was used.
+The decisions address different facts and do not establish a general safe harbor
+for supervised AI use.
 
 The tool I couldn't find was one that made AI in the report-writing workflow
-actually accountable: a closed-world grounding rule that physically can't
-introduce what you didn't give it, and a disclosure record built to produce
-rather than reconstruct. So I built it. The discipline knowledge comes from the
+accountable: a citation-ID gate that flags missing or unknown IDs, and a
+disclosure record built to produce rather than reconstruct. So I built it.
+The discipline knowledge comes from the
 experts I'm working with — the tool comes from me. That's the honest division.
 
 [Note to editor: do not expand this with credentials, case wins, or years of

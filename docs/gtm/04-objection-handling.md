@@ -55,22 +55,23 @@ admissible.
 > That's the failure that's getting people burned, and it's the one thing this is
 > built around. It works **closed-world**: every factual sentence has to carry a
 > citation marker back to an evidence unit **you supplied.** If a sentence has no
-> grounded source, or cites something you didn't give it, the **export hard-blocks
-> it** — the file won't generate. It can't reach outside your evidence to invent a
-> source, because it has nothing else to reach into. Where it's missing something,
-> it **flags the gap and asks you** — it never fills it in.
+> citation or cites an ID you did not supply, **export hard-blocks it**. The check
+> does not determine whether a supplied source supports the sentence; you must
+> verify that yourself. The prompt asks the model to flag gaps for your input.
 >
 > The contrast is the case law. In *Kohls v. Ellison* the expert let a chatbot fill
-> in citations, it fabricated them, and the declaration got struck. *Concord v.
-> Anthropic* was a real journal with an AI-invented title — same outcome. The
-> pattern that *survived* is *Ferlito v. Harbor Freight*: the expert reached his
-> conclusions independently and used AI only to **confirm** them — testimony
-> allowed. That supervised pattern is exactly what this enforces.
+> in citations; fabricated sources led to exclusion of the declaration on the
+> preliminary-injunction motion. In *Concord v. Anthropic*, the court struck
+> **one paragraph** containing an AI-invented title and inaccurate authors for a
+> real article. In *Ferlito v. Harbor Freight*, the court found no reliability
+> problem from post-report AI confirmation of independent findings. That was a
+> fact-specific ruling, not a general safe harbor or approval of this product.
+
+See the [case summaries and court sources](00-content-brief.md#case-law--use-only-these-with-this-framing-and-these-caveats).
 
 **Why this works:** answers the existential fear with the concrete mechanism (hard
 block on ungrounded/invalid cites, gaps flagged not filled), then grounds it in the
-real cases — the cautionary pair vs. the safe-harbor pattern. Honest verbs
-throughout.
+case-specific outcomes. Do not turn them into an admissibility promise.
 
 ---
 
@@ -78,8 +79,9 @@ throughout.
 
 **The answer:**
 > Good — they should be. The template isn't a fill-in-the-blanks form that
-> flattens your work; it's the **Rule 26 skeleton** every report in your field
-> already shares — opinions and basis, facts considered, exhibits, qualifications,
+> flattens your work; it follows the **Rule 26(a)(2)(B) structure** generally
+> required for retained testifying experts in federal civil litigation, unless
+> otherwise stipulated or ordered — opinions and basis, facts considered, exhibits, qualifications,
 > prior testimony, compensation. Your **methodology, your analysis, your opinions**
 > fill it, and they're yours. And the template is the part I most want a design
 > partner to **red-team** — right now it's desk research until a practicing expert
@@ -98,23 +100,25 @@ Honestly flags the template as unvalidated desk research.
 
 **The answer:**
 > Straight answer: **yes, your use of AI may be discoverable.** In *Conservation
-> Law Foundation v. Shell* a magistrate ordered an expert to produce her AI
-> **prompts** as Rule 26 methodology — though I'll be clear, that's a **non-final
-> order, objected-to under Rule 72(a) and stayed pending review**, so it's a signal
-> of direction, not settled law. I'm not going to tell you a record makes the AI
-> question disappear. It doesn't.
+> Law Foundation v. Shell*, the May 18, 2026 order required CLF to revise
+> discovery responses concerning its expert team's AI prompts/queries, produce
+> responsive material, or certify after diligent search that none existed.
+> A June 3 stay pending review was reported; our September 26 review did not
+> independently verify the current docket status. Check the docket before citing
+> it. The order addressed this case's methodology; it is not a universal rule.
+
+See the [court-text order copy](https://websitedc.s3.amazonaws.com/documents/Conservation_Law_Foundation_Inc._v._Shell_Oil_Company_3_21-cv-00933__CourtListener.com.pdf).
 >
 > What it changes is **which record exists when they ask.** The choice isn't
-> "record or no record" — it's a **clean, contemporaneous, tamper-evident** account
-> of each AI-assisted section, the model and version, and exactly the evidence it
-> was given… **versus** reconstructing it from memory months later under a motion to
-> compel. *Ferlito* shows that supervised AI use — you reaching the conclusions,
-> AI assisting — is fine and survives. A clear record is how you *show* that's what
-> happened, instead of trying to remember it on the stand like the expert in *Matter
-> of Weber*, who couldn't recall her prompts and got her opinion thrown out.
+> "record or no record" — it's a **contemporaneous, tamper-evident** account
+> of recorded AI-assisted sections, the model and version, and the evidence IDs
+> recorded as supplied… **versus** reconstructing it from memory months later
+> under a motion to compel. *Ferlito* shows a supervised pattern where the expert
+> reached the conclusions and AI assisted. A clear record helps you explain
+> what was recorded instead of relying on memory months later.
 
 **Why this works:** it concedes the true risk (discoverability) and the case's
-non-final status up front — which is what earns the expert's trust — then makes the
+case-specific scope and unverified current status up front — which is what earns the expert's trust — then makes the
 real argument: not invisibility, but a good record vs. a reconstructed one, with
 *Ferlito* and *Weber* showing both outcomes. Never overstates.
 
@@ -161,17 +165,19 @@ credibility with exactly the audience that checks.
 **The answer:**
 > That's a fair and correct instinct — you should be cautious about who you build
 > a report-signing habit around. I'm not going to pretend to be a company I'm not.
-> What I'd offer instead of claims: the **first report is free**, so you risk
-> nothing to test it; authorship and responsibility **stay entirely with you**;
-> case files **stay on your machine**; and either of us can walk away anytime with
-> nothing published about you without your say-so. The design-partner model is
+> What I'd offer instead of claims: the **first report is free** to test; you
+> review, adopt, sign, and remain responsible for the report. Document parsing
+> runs in your browser, while model drafting and saved reports use the services
+> described in the data-handling terms. Either of us can walk away anytime
+> with nothing published about you without your say-so. The design-partner model is
 > built for exactly this trust gap — you keep control of everything that matters and
 > see the product do real work before you rely on it. And the integrity isn't my
-> word; it's **mechanical** — the export blocks an ungrounded citation whether I'm
-> watching or not.
+> word; it's **mechanical** — the export blocks a missing or unknown citation ID
+> whether I'm watching or not. It cannot assess whether a valid source supports
+> the claim.
 
 **Why this works:** validates the caution instead of arguing it, then replaces
-"trust me" with verifiable structure (free trial, retained authorship, local files,
+"trust me" with verifiable structure (free trial, expert review, browser-side parsing,
 exit rights, a mechanical guarantee). No fake scale or social proof.
 
 ---
@@ -184,8 +190,8 @@ exit rights, a mechanical guarantee). No fake scale or social proof.
 > Fair question, and I'll be specific without knocking anyone.
 > - **ChatGPT** is an open-world general model — it'll happily write you a citation
 >   that doesn't exist, because nothing stops it reaching outside your evidence.
->   This is **closed-world**: it can only use what you give it, and the export
->   **blocks** an ungrounded cite. Different job.
+>   This is **closed-world**: the prompt limits it to what you give it, and export
+>   **blocks** missing or unknown citation IDs. Different job.
 > - **CaseMark and the general legal-AI tools** are built for the litigation team —
 >   summaries, drafting across a matter. They're not built around a forensic
 >   **expert's** signature, one discipline's methodology, and a disclosure record
@@ -212,12 +218,11 @@ disarming.
 > It's your signature, so you review every line — that's the design, not a
 > disclaimer. Two things make that review concrete: the prompt restricts model
 > output to your supplied evidence and source IDs are checked; and where
-> something is missing it **flags the gap** with an "expert input needed" marker —
-> it **doesn't quietly fill it in.** Live in the editor, each sentence shows green,
+> something is missing the prompt tells the model to use an "expert input needed"
+> marker rather than fill it in. Live in the editor, each sentence shows green,
 > amber, or red as you type, so missing and unknown citations are visible. A valid
 > source ID does not prove semantic support, so your source-by-source verification
 > remains essential.
-> instead of buried.
 
 **Why this works:** answers the liability fear with the mechanism (restricted
 prompt, checked source IDs, visible gaps), and keeps verification, adoption, and
@@ -288,9 +293,9 @@ pricing as still-validating — which is both honest and useful discovery signal
 | # | Objection | The one-line honest answer |
 | --- | --- | --- |
 | 1 | AI reports are unethical / cross-exam suicide | It structures *your* findings; you author and sign. Op. 512 = disclosure, not abstinence. |
-| 2 | Citations will be hallucinated | Closed-world; export hard-blocks ungrounded/invalid cites. *Kohls/Concord* vs. the *Ferlito* pattern. |
+| 2 | Citations will be hallucinated | Citation-ID check; export blocks uncited/unknown-ID sentences; expert verifies source support. *Kohls/Concord* vs. the *Ferlito* pattern. |
 | 3 | My reports are too bespoke | The template is just the Rule 26 skeleton; your methodology fills it. Red-team it with me. |
-| 4 | The record will be used against me | Yes, AI use may be discoverable (*CLF v. Shell*, non-final). A clean contemporaneous record beats a reconstructed one; *Ferlito* shows supervised AI survives. |
+| 4 | The record will be used against me | Yes, AI use may be discoverable (*CLF v. Shell*; recheck current status). A contemporaneous record can aid explanation; *Ferlito* is fact-specific. |
 | 5 | I don't write enough reports | Per-report pricing, first one free. Pay for what you produce. |
 | 6 | Files under protective order | Browser-side intake — file never leaves your machine. No-training **commitment** (not a cert). |
 | 7 | Don't trust a solo unknown vendor | Fair caution. Free first report, you keep authorship + files + exit; integrity is mechanical. |
@@ -304,5 +309,6 @@ pricing as still-validating — which is both honest and useful discovery signal
 
 *General information for the founder's own preparation — not legal advice, and not
 a law firm. Case summaries are summaries, not holdings; verify against the official
-reporter, and note* Conservation Law Foundation v. Shell *is a non-final order under
-review that may change. Verify the applicable rules for your jurisdiction.*
+reporter. The current review/stay status of* Conservation Law Foundation v. Shell
+*was not independently verified on September 26, 2026. Recheck the docket and the
+applicable rules for your jurisdiction.*

@@ -21,9 +21,11 @@ You'll need:
 - Your evidence: case records, deposition excerpts, evaluation notes, medical
   records, or any documents you reviewed in forming your opinions
 
-Everything you type into the workspace stays in your browser session until you save
-it to your account. Nothing is sent to the server until you click "Pull items from
-this text" or "Build & preview report."
+Before extraction, report building, export, or saving, entries are held in the
+browser session. Those actions send relevant text to the app server; live AI mode
+may also send it to the configured model provider. Saving writes the report to
+your account. Use only material you are authorized to process under the stated
+data-handling terms.
 
 ---
 
@@ -165,8 +167,10 @@ writing**.
 
 - **On (default):** a model arranges your confirmed findings into fluent prose,
   still cited only to your evidence. You review and sign every line.
-- **Off:** a fixed, rule-based formatter assembles the report with no model involved.
-  The AI-Disclosure Appendix will state that no AI produced any text.
+- **Off:** a fixed, rule-based formatter assembles the report without a model
+  call from this tool. The appendix states that no generative model call appears
+  in the report assembly log. Review outside text and any intake processing
+  separately when assessing a no-AI policy.
 
 Either way, the grounding gate applies identically: every sentence must cite your
 evidence or be flagged, and the file won't export until it does.
@@ -266,7 +270,7 @@ The exported file contains:
 ## Step 9 · What the AI-Disclosure Appendix is
 
 The Appendix at the end of your exported file is generated automatically from the
-disclosure record — a cryptographically linked log of exactly what happened during
+disclosure record — a cryptographically linked log of activity recorded during
 the build:
 
 - Which sections were structured with AI assistance (or, in no-AI mode, that none
@@ -275,9 +279,10 @@ the build:
 - The evidence items provided to the model for each section
 
 The Appendix also includes an integrity note: "Each entry in this record is
-cryptographically linked to the entry before it, so any later edit or deletion
-would be detectable." This means tampering with the record is **detectable**, not
-impossible — which is why the word "tamper-evident" is used, not "tamper-proof."
+cryptographically linked to the entry before it, so a broken presented chain
+can be detected." This means the hash check verifies internal consistency of
+the presented record; it cannot prove completeness or detect every alteration.
+That is why the word "tamper-evident" is used, not "tamper-proof."
 
 Profile sections — your qualifications, prior testimony, and compensation statement
 — are authored directly by you. They involve no model call and do not appear in the
@@ -351,9 +356,10 @@ on the discovery rules and court orders in your matter. We are not a law firm; v
 the applicable rules for your jurisdiction.
 
 **Q: What if the tool says `[Expert input needed: …]`?**
-That means the supplied evidence did not support that sentence — the tool refused to
-invent content. Fill in your own text based on your expert judgment, then add the
-citation to the evidence that supports it.
+That means the draft asks for your input at that point. Review the surrounding
+text as well: the prompt asks the model to surface gaps, but the citation check
+cannot detect an unsupported claim attached to a valid ID. Supply your own
+wording based on expert judgment and cite the evidence that supports it.
 
 **Q: Can I use my own wording instead of the AI-structured prose?**
 Yes. Click **Edit** on any section, write what you want, and add your citations. The
@@ -373,8 +379,9 @@ spreadsheet parsing, OCR for scanned documents — runs entirely on your device.
 the text you review and choose to pull into evidence items is sent to the server.
 
 **Q: Is this report "court-defensible" or "compliant"?**
-No. The report is organized to the Rule 26(a)(2)(B) structure and every factual
-sentence is traced to your evidence. Whether any report is admissible is a judicial
+No. The report is organized to the Rule 26(a)(2)(B) structure and report
+sentences are checked for citation IDs from your evidence list. You must verify
+that each source supports the claim. Whether any report is admissible is a judicial
 determination that depends on the expert's qualifications, methodology, and the
 court's standards. We are not a law firm; this is not legal advice.
 

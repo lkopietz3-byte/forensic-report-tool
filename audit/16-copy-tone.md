@@ -2,6 +2,13 @@
 
 **Scope:** All visible user-facing copy: `src/app/page.tsx`, `src/app/layout.tsx`, `src/app/_components/Waitlist.tsx`, `src/app/app/Workspace.tsx`, `src/app/sample/page.tsx`.
 
+**Correction (2026-09-26):** This is a historical copy audit. Its quoted and
+recommended wording below is preserved as the original review record, not
+approved current copy. The citation check validates supplied IDs, not whether a
+source supports a sentence; it cannot guarantee that nothing was invented.
+The appendix reflects recorded events and its hash check does not establish
+completeness, authorship, or legal readiness. Expert review remains necessary.
+
 ---
 
 ## Tone Diagnosis

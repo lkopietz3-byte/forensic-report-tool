@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 const HELP_QA: { q: string; a: string }[] = [
   {
     q: "What does Disclosed. do?",
-    a: "It structures your own findings into a Rule 26(a)(2)(B)-organized report. Every factual sentence must carry a source ID you supplied, and it keeps an automatic record of any AI use. You review, independently verify, adopt, and sign it.",
+    a: "It structures your own findings into a Rule 26(a)(2)(B)-organized report. Every factual sentence must carry a source ID from your evidence list, and it records AI use. A matching ID does not prove the source supports the sentence. You review, independently verify, adopt, and sign it.",
   },
   {
     q: "Do I need an account to try it?",
@@ -34,19 +34,19 @@ const HELP_QA: { q: string; a: string }[] = [
   },
   {
     q: "What is closed-world grounding?",
-    a: "Every factual sentence must carry an evidence ID you supplied, and unknown or missing IDs block export. That proves source linkage, not semantic support: you still compare the sentence with the cited source and verify it.",
+    a: "Every factual sentence must carry an evidence ID you supplied, and unknown or missing IDs block export. That confirms the ID is listed, not semantic support: you still compare the sentence with the cited source and verify it.",
   },
   {
     q: "Why was my sentence flagged red?",
-    a: "It makes a factual claim with no citation, or cites an ID that isn't in your evidence list. Add the source, or fix the [[E:id]] marker so it matches an evidence item, and it clears.",
+    a: "It has no citation, or cites an ID that isn't in your evidence list. Add the source, or fix the [[E:id]] marker so it matches an evidence item, and it clears.",
   },
   {
     q: "What's in the AI-Disclosure record?",
-    a: "For each AI-assisted section: the model and version, and exactly the evidence it was given. The log is append-only and tamper-evident (alteration is detectable, not impossible). In no-AI mode it states that no model produced any text.",
+    a: "For each AI-assisted section: the model and version, and the IDs of evidence items supplied for it. A hash check tests the presented entries for internal consistency; it cannot prove completeness or rule out a full rewrite. In no-AI mode the appendix records no generative model call during report assembly; it cannot assess outside text.",
   },
   {
     q: "Can I use it with no AI at all?",
-    a: "Yes. No-AI mode assembles the report with a fixed, rule-based engine, with no model involved. The same grounding and export gate apply, and the disclosure states plainly that no AI wrote anything.",
+    a: "Yes. No-AI mode assembles the report with a fixed, rule-based engine and no model call from this tool. The same citation and export gates apply. You still review any text supplied from outside the tool.",
   },
   {
     q: "What does it cost?",

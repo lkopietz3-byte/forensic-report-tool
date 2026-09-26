@@ -8,13 +8,13 @@ import type { AuditEvent } from "./types.js";
  * using the Web Crypto API (`globalThis.crypto.subtle`) instead of `node:crypto`,
  * so it runs in any modern browser with no account, no server round-trip, and no
  * trust in disclosed.app. Opposing counsel, a court, or the expert can confirm a
- * report's AI-use record was not altered after it was recorded.
+ * the presented record is internally consistent.
  *
  * It MUST stay byte-for-byte compatible with `audit.ts`'s `hashEvent` /
  * `canonicalJSON` — `src/test/verifyManifest.test.ts` pins that parity against
  * the real `AuditLog`. The chain is tamper-EVIDENT, not tamper-proof: a pass
- * proves the presented records are internally consistent and unaltered since
- * they were hashed, not that no one with write access ever rewrote the whole
+ * shows the presented records are internally consistent. It cannot establish
+ * completeness, authorship, or that no one with write access rewrote the whole
  * chain from genesis. Keep this module dependency-light (web standards only) so
  * it can also be the reference implementation a third party reimplements.
  */

@@ -11,8 +11,9 @@
 **Q1. What does Disclosed. actually do?**
 
 The tool takes the findings, evidence, and notes you supply and structures them
-into a Rule 26(a)(2)(B)-organized report — with every factual sentence tied to
-a source you provided. It also keeps an automatic, append-only record of how AI
+into a Rule 26(a)(2)(B)-organized report — with report sentences checked for
+citation IDs from your supplied evidence list. It also keeps an automatic,
+append-only record of how AI
 was used during that structuring, which becomes an AI-Disclosure Appendix in
 your export. You review, edit, and sign the result. Authorship and professional
 responsibility stay with you throughout.
@@ -70,8 +71,8 @@ signing.
 
 **Q8. What do the green, amber, and red colors in the editor mean?**
 
-As you type or edit a section, each sentence is grounded in real time against
-the evidence you've added:
+As you type or edit a section, each sentence is checked in real time for
+citation IDs against the evidence list you added:
 
 - **Green** — the sentence cites at least one source you supplied and that
   source is in your evidence list.
@@ -93,11 +94,12 @@ citation chip in the Sources panel to insert the correct marker at your cursor.
 
 **Q10. What does `[Expert input needed: …]` mean?**
 
-It means the tool reached a point in the structure where an opinion or figure is
-expected — a post-injury earning range, an adopted TSA conclusion — and nothing
-in your evidence resolved it. The placeholder names the gap precisely so you
-know what to supply. The tool does not fill these in; that's your professional
-judgment. Export is blocked until every placeholder is resolved or the section
+It means the draft marked a point in the structure where an opinion or figure
+is expected — a post-injury earning range, an adopted TSA conclusion — for your
+input. The placeholder names the gap so you know what to supply. The prompt
+instructs the model not to fill these in; review the rest of the draft for
+unsupported claims as well. Export is blocked until every placeholder is
+resolved or the section
 is removed.
 
 **Q11. Can I add an evidence item by typing it in rather than uploading a document?**
@@ -114,39 +116,44 @@ text; any sentence that cites it must use its assigned ID.
 **Q12. What is in the AI-Disclosure Appendix?**
 
 For each AI-assisted section: the section name, the model name and version that
-processed it, and the exact list of evidence items the model was given — and
-nothing it was not given. The appendix also carries a statement that the expert
-reviewed, verified, edited, and adopted all content, and that no AI-produced
-text entered the report without that review. In no-AI mode the appendix states
-plainly that no model produced any text.
+processed it, and the evidence IDs recorded as supplied to the model. The
+appendix reports the presented log; it cannot independently prove the record
+is complete. It also states the intended expert review and adoption process;
+the hash chain cannot prove that a person completed that review. In no-AI mode
+the appendix states that no generative model call appears in the report assembly
+log. It cannot assess material supplied from outside the tool.
 
 **Q13. What does "tamper-evident" mean? Is the record tamper-proof?**
 
 The audit log is append-only and hash-chained: each entry includes a
 cryptographic hash of the previous entry, so the chain can be verified from
-the beginning on every load. If the chain has been altered after the fact,
-verification fails and the workspace reports it. "Tamper-evident" means
-tampering is **detectable**, not that it's impossible. The tool cannot
+the beginning on every load. If an entry or link in the presented chain changes
+without a matching recalculation, verification fails and the workspace reports
+it. "Tamper-evident" means
+inconsistency in the presented chain is **detectable**, not that every
+alteration or omission can be detected. The tool cannot
 physically prevent someone with direct database access from altering a record;
-what it can do — and does — is make the alteration visible. We describe this as
+what it can do is flag a broken presented chain. A complete rewrite or missing
+events may still pass without an independent trusted record. We describe this as
 "tamper-evident," not "tamper-proof" or "immutable."
 
 **Q14. Can the Appendix be removed from the export?**
 
 The AI-Disclosure Appendix is part of every export by design. Suppressing it
 would defeat the product's core purpose. If you use no-AI mode, the appendix
-still appears and states that no AI produced any text — which is itself a
-disclosure.
+still appears and states that no generative model call appears in the report
+assembly log.
 
 **Q15. What is no-AI mode and when would I use it?**
 
 No-AI mode assembles and formats your report using a fixed, rule-based engine
-with no language model involved. Every sentence still has to cite evidence you
-supplied; the closed-world grounding and the export gate are unchanged. The
-AI-Disclosure Appendix then states `deterministic-structurer (no-ai-v1)` as the
-method — an accurate record that no model wrote anything. Use it when you want
-the structure and citation checking without any AI text in the chain, or when
-your retaining agreement or firm policy requires it.
+without a language-model call from this tool. Every sentence still has to cite
+evidence you supplied; the citation and export gates are unchanged. The
+AI-Disclosure Appendix records `deterministic-structurer (no-ai-v1)` as the
+method. It cannot determine whether material supplied from outside the tool
+was AI-generated, and the report-assembly toggle does not govern every intake
+operation. Check any retaining agreement or firm policy against the full
+workflow, and review and disclose outside material as required.
 
 ---
 
@@ -171,8 +178,8 @@ supporting. You can also type the marker directly if you know the ID.
 
 That's fine and expected. The same evidence item can support sentences in
 different sections; the grounding check is per-sentence, not per-section.
-The disclosure appendix records each section's evidence list separately, so the
-record reflects exactly which sources were behind which section.
+The disclosure appendix records each section's supplied evidence IDs separately.
+It does not establish which sources substantively supported each claim.
 
 **Q19. Can I reorder my evidence items?**
 
@@ -240,8 +247,10 @@ signed certification. Our privacy terms are in draft pending legal review.
 
 **Q26. What is stored when I save a report versus when I don't?**
 
-If you don't save: everything stays in your browser session and is gone when
-you close the tab. Nothing is written to our servers.
+If you don't save: no report is added to your account. Your browser state is
+discarded when the tab closes, but extraction, report building, and export send
+content to the app server; live AI mode may also send it to the model provider.
+Do not interpret "not saved to your account" as "never processed by a server."
 
 If you save (requires an account): your evidence text, section assignments,
 expert edits, formatting choices, and the audit hash chain are written to your
@@ -278,11 +287,10 @@ one credit; a materially revised version uses another.
 
 This is the most important section in the help center.
 
-- **Does not originate opinions, facts, numbers, or citations.** The tool
-  structures and formats content you supply. Every factual sentence must trace
-  to evidence you provided. The tool has no ability to invent a wage figure,
-  diagnose a condition, or create a source that wasn't in your file. If it can't
-  ground a sentence, it flags it and blocks export.
+- **Does not determine whether a claim is supported or true.** The tool is
+  designed to structure and format content you supply. Export blocks sentences
+  with missing or unknown citation IDs, but a valid ID can accompany an invented
+  or unsupported claim. Review every statement against the cited source.
 
 - **Does not determine admissibility.** Whether your report — or the AI-use
   disclosure it contains — satisfies a particular court's standards is the
@@ -291,9 +299,9 @@ This is the most important section in the help center.
   sufficiency of that disclosure is outside our authority to declare.
 
 - **Does not make the audit chain tamper-proof.** The chain is tamper-evident:
-  alteration is detectable. We cannot prevent someone with direct database
-  access from modifying a record; we can — and do — make the modification
-  visible when the chain is re-verified.
+  the presented chain is checked for internal consistency. We cannot prevent
+  someone with direct database access from modifying a record, and a wholly
+  rewritten or incomplete chain can still verify without an independent anchor.
 
 - **Does not hold SOC 2 certification.** We are a pre-revenue product in
   validation. We have data-handling commitments and engineering controls
