@@ -1,4 +1,9 @@
-# Outreach batch 1 — 10 emails (vocational-rehab beachhead)
+# Outreach batch 1 — 10 sample drafts (vocational-rehab beachhead)
+
+These are unsent examples with fictional hooks and placeholder links. Verify every
+recipient detail, product claim, price, offer, and link against the current product
+before adapting a draft. Keep actual prospect details and outreach history in a
+private, access-controlled system outside this public repository.
 
 Ten **distinct** drafts, one per prospect type. They are deliberately different in
 angle, length, and rhythm — because the #1 tell of a mass-mailed (or AI-written)
@@ -11,14 +16,17 @@ obviously about *them*.**
 2. Replace `[Name]` and the `[hook: …]` slot with one real, specific detail — a talk
    they gave, a directory listing, a LinkedIn post, a mutual contact, a case. The
    hook examples are illustrations, not facts to send.
-3. Cut a sentence. Let it sound typed on a phone. Then send.
+3. Cut a sentence. Let it sound typed on a phone. Verify the final copy and then send.
 
 **Links to drop in** (set your real domain first): sample `…/sample` · application
 `…/for-experts` · AI-disclosure article `…/resources/ai-disclosure-in-expert-reports`.
 
 **Honesty guardrails (non-negotiable):** say it **structures/puts your findings in
-Rule 26 format** and **won't add a fact or citation you didn't give it**; it keeps a
-**tamper-evident record of how AI was used**; **you are the author**. Never write
+Rule 26-oriented format**; the model is instructed to use supplied evidence and a
+check flags missing or unknown citation IDs, but **the expert must verify factual
+support, prepare, and sign the final report**. It keeps a **hash-chained AI-use
+record whose checked entries can reveal changes within that chain**; it cannot
+establish that the record is complete or independently timestamped. Never write
 "court-defensible," "admissible," "compliant," or "guaranteed" — admissibility is the
 court's call. Banned tells: "I hope this finds you well," leverage/robust/seamless/
 streamline, three-part parallel sentences, em-dash overload, a wall of text.
@@ -35,9 +43,10 @@ in their headline). Lead with the part everyone hates.
 > courts for years]. Quick one, nothing to buy.
 >
 > I'm building a tool that takes the findings you've already worked out and puts
-> them in Rule 26 format for you. It won't add a number or a cite you didn't give
-> it — if something isn't backed by your own evidence, it flags it instead of making
-> it up. You still write the opinions and sign it.
+> them in Rule 26-oriented format for you. It checks whether citations refer to
+> evidence IDs you supplied; you'll still need to check every number, citation,
+> and factual sentence against the underlying material, write the opinions, and
+> sign the report.
 >
 > 2-minute sample here: [/sample]. If it's any good, there's a short form to tell me
 > what's missing: [/for-experts]. Even a one-line reply helps.
@@ -51,13 +60,13 @@ the legal moment.
 > Subject: "did you use AI on this?"
 >
 > Hi [Name] — [hook: your post about getting hammered on methodology at depo stuck
-> with me]. "Did you use AI, and how?" is turning into a real cross-exam question. An
-> expert's declaration got tossed in *Kohls v. Ellison* over invented cites, and in
-> *CLF v. Shell* a court told an expert to produce her AI prompts.
+> with me]. "Did you use AI, and how?" is a question experts should be prepared to
+> answer accurately. A disclosure record can help explain the use that was logged;
+> it does not establish that every use was captured.
 >
 > I wrote up where that leaves experts: [/resources/ai-disclosure-in-expert-reports].
-> I'm also building the fix — your findings, your report, an automatic record of how
-> AI was used, you as the author. Worth a look? Sample: [/sample].
+> I'm also building a tool for this workflow — your findings, your report, a record of logged
+> AI use, with you as the author. Worth a look? Sample: [/sample].
 
 ## 3 — Hours back
 *Use when:* a full-time, high-volume expert. Make it about reclaimed time.
@@ -69,8 +78,8 @@ the legal moment.
 > of it gets written off as unbillable.
 >
 > The tool I'm building does that pass for you from your own findings — Rule 26
-> structure, every factual line tied back to the evidence you gave it, an
-> AI-use record attached. You review and sign. Curious what you'd think of the
+> structure, citation-ID checks against the evidence you gave it, and an
+> AI-use record attached. You verify the draft and sign. Curious what you'd think of the
 > output: [/sample]. Short form if you want to shape it: [/for-experts].
 
 ## 4 — Just look
@@ -86,18 +95,18 @@ hook. Lowest-commitment ask.
 > Here it is: [/sample]. Mind telling me one thing that's wrong with it? That's the
 > whole ask.
 
-## 5 — It won't invent a number
+## 5 — A check on evidence references
 *Use when:* a vocational economist / RAPEL practitioner who lives in the numbers.
 
-> Subject: it won't make up a number
+> Subject: keeping numbers tied to your sources
 >
 > Hi [Name] — [hook: your work runs on RAPEL/TSA and labor-market data, so this may
 > land or may horrify you]. The thing I'm building structures *your* findings into a
-> Rule 26 report and refuses to originate anything — no figure, no wage, no cite that
-> didn't come from you. If a sentence isn't backed by your evidence, it gets flagged,
-> not smoothed over.
+> Rule 26-oriented report. It checks that citation IDs point to evidence you
+> supplied, and asks you to verify every figure, wage, citation, and sentence
+> against the source before signing.
 >
-> That closed-world rule is the whole point. Sample's here if you want to poke at it:
+> That review step is the whole point. Sample's here if you want to poke at it:
 > [/sample]. I'd genuinely like to know where it falls short for an economist:
 > [/for-experts].
 
@@ -111,9 +120,10 @@ labor-market survey. Frame: a neutral second set of eyes, never leading.
 > nitpicked on foundation]. Part of what I'm building is a private check that asks
 > *you* neutral questions about your own file — "is this records list cited
 > anywhere," that kind of thing — without ever suggesting what your opinion should be.
-> It never writes content and never leaves the room.
+> It does not draft report content; please verify its current data-handling
+> behavior before using confidential case material.
 >
-> The report side puts your findings in Rule 26 format and keeps an AI-use record.
+> The report side puts your findings in Rule 26-oriented format and keeps an AI-use record.
 > Sample: [/sample]. Would love your read on whether the gap-check is useful or
 > annoying: [/for-experts].
 
@@ -139,9 +149,9 @@ work. Meet it head-on.
 >
 > Hi [Name] — [hook: I saw your take that AI doesn't belong anywhere near an expert
 > report]. I mostly agree, which is why I built the opposite of what you're picturing.
-> It doesn't write opinions. It can't add a fact or a cite you didn't give it. What it
-> does is format your own findings into Rule 26 and keep a tamper-evident record of
-> exactly how it was used, so the AI question has a clean answer instead of a guess.
+> It is designed to structure your findings without writing your opinions. It
+> checks supplied citation IDs, while you verify the factual support. It keeps a
+> hash-chained record of recorded AI use to review alongside the report.
 >
 > If it changes your mind even a little, I'd call that a win: [/sample]. If it
 > doesn't, tell me why — that's more useful to me: [/for-experts].
@@ -156,8 +166,9 @@ seat-price objection up front.
 > tools want a monthly fee that sits dead 11 months of the year. This one's per
 > report — you only pay when you actually write one, and the first one's free to try.
 >
-> It structures your own findings into Rule 26 format, won't invent anything, and
-> attaches a record of any AI use. Have a look whenever: [/sample].
+> It structures your findings into Rule 26-oriented format, checks citation IDs,
+> and attaches a record of logged AI use. You review the final report. Have a look
+> whenever: [/sample].
 
 ## 10 — Warm intro (forward to a mutual contact)
 *Use when:* you share a connection. Send this *to the contact*, not the expert.
@@ -168,7 +179,13 @@ seat-price objection up front.
 
 ---
 
-## Tiny tracker (fill as you go — target 40 sent → ~10 replies → 1–2 partners)
+## Example tracker layout (do not fill in this public file)
+
+Copy this layout into a private, access-controlled system if useful. The numbers
+below are planning targets, not observed outreach results. Do not commit names,
+contact details, replies, or interview notes to this repository.
+
+*Planning target: 40 sent → ~10 replies → 1–2 partners.*
 
 | # | Name | Discipline / source | Draft used | Sent | Follow-up (d4 / d10) | Reply | Notes |
 |---|------|---------------------|-----------|------|----------------------|-------|-------|
