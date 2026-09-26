@@ -18,9 +18,9 @@ Mapped on **2026-09-26** from connected GitHub, Vercel, and Supabase metadata. T
 
 ## Service map
 
-- No Vercel or Supabase project could be linked from the available evidence. This is an unknown connection state, not proof that the repository has no deployment or database.
+- Service project identifiers, dashboard URLs, and deployment details are omitted from this public file. Verify current connections in an authorized service dashboard before a release.
 
-A source reference, matching name, or past deployment does not establish a current production connection. No keys, environment values, database rows, or customer data are recorded here.
+Repository configuration and source references do not establish production health or runtime database use. No keys, environment values, database rows, or customer data are recorded here.
 
 ## For AI analysis
 
