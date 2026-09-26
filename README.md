@@ -1,20 +1,20 @@
 # Disclosed. — Forensic Report Tool
 
-An AI tool that **structures** a forensic expert witness's **own** findings into a Rule 26(a)(2)(B)-organized report — formatting and organizing, never inventing facts, opinions, numbers, or citations — with an automatic, **tamper-evident** AI-Disclosure record as the moat. Admissibility is always the court's determination; the tool produces the disclosure, not the verdict. (Copy and terminology rules: `docs/VOICE.md`; the working agreement and the one invariant: `CLAUDE.md`.)
+Disclosed helps a forensic expert organize their own findings into a Rule 26(a)(2)(B)-oriented report. The workspace accepts expert-supplied evidence, builds a citation-marked draft, and records AI involvement in a tamper-evident disclosure log. **The expert must review every fact, opinion, number, citation, and conclusion before use.** The citation check verifies that referenced evidence IDs were supplied; it does not determine whether the evidence actually supports a sentence. Admissibility is for the court to decide.
 
-**Beachhead:** forensic **vocational rehabilitation / earning-capacity** experts (CRC/ABVE, RAPEL method). Next disciplines (template-additive): accident reconstruction (ACTAR), forensic engineering. No medical/IME (PHI/HIPAA + crowded).
+**Intended first audience:** forensic vocational rehabilitation and earning-capacity experts. Other disciplines are prospective template extensions, not verified supported workflows. Medical/IME use is outside the stated scope.
 
-## Why this exists (one paragraph)
-Six waves of market research narrowed the thesis to forensic expert-witness report structuring. The product is built around a credible but still unvalidated pain: experts perform high-value professional work while manually assembling reports, and recent rulings make it increasingly important to preserve a clear record of how AI touched expert methodology. The business case still depends on interviews, a design partner, and paid-pilot evidence; desk research is not treated as customer proof.
+## Why this exists
+Expert reports need a traceable separation between an expert's own analysis, supplied evidence, and AI-assisted formatting. This project explores whether a structured workspace and disclosure record can reduce report-assembly work while preserving that separation. Customer demand, design-partner fit, and legal suitability remain unvalidated by the repository alone.
 
-## What's built (feature-complete, security-hardened)
+## Implemented in this repository
 
-- **Report builder** (`/workspace`): enter or paste evidence, tag it to template sections, build a fully cited preview, export Word/PDF. One-click worked example; private (never-persisted) challenge-readiness self-check.
-- **The invariant, enforced server-side:** closed-world `[[E:<id>]]` grounding; export returns **422 GROUNDING_BLOCKED** if any sentence is ungrounded or cites unfed evidence — checked on the *adopted* text, so edits can't bypass it.
-- **The moat:** append-only, hash-chained audit log → AI-Disclosure Appendix; persisted with its hash fields and **re-verified on read** (tamper-evident across the DB boundary).
+- **Report builder** (`/workspace`): enter or paste evidence, tag it to template sections, build a citation-marked preview, and export Word/PDF. A worked example and a session-only challenge-readiness self-check are available. Human review remains required.
+- **Citation-ID gate:** the server checks the adopted text for `[[E:<id>]]` markers. Export returns **422 GROUNDING_BLOCKED** for sentences without an accepted marker or with an ID outside the supplied evidence set. A valid marker establishes a reference to a supplied ID, **not factual or semantic support**; the expert must inspect the source and sentence.
+- **Disclosure record:** an append-only, hash-chained audit log feeds the AI-Disclosure Appendix. Stored hash fields are re-verified on read. This makes changes detectable within the checked chain; it is not proof that an expert's underlying statements are true.
 - **Accounts + persistence:** Supabase magic-link auth; RLS isolates every row per expert; saves are immutable snapshots.
 - **Billing:** Stripe — one-time report credits (atomic spend via a locked RPC, first credit free), idempotent signature-verified webhooks. The former annual entitlement remains supported in code for compatibility but is not part of the public early-access offer while report volume is still being validated.
-- **Security:** per-request CSP nonce on case-data routes, HSTS, strict headers, rate limiting, structured logging with redaction, 220+ tests including gated live-DB isolation tests.
+- **Security controls in source:** per-request CSP nonce on case-data routes, HSTS, security headers, rate limiting, and structured logging with redaction. The repository declares automated tests and gated live-database isolation tests; this README does not establish the security or configuration of a live deployment.
 
 Keyless preview mode runs everything with zero env vars (deterministic structuring, session-only). `docs/SETUP-checklist.md` is the walk-through for turning on live AI / accounts / billing; `DEPLOY.md` is the deploy runbook; `RELEASE.md` is the ship gate.
 
@@ -28,26 +28,25 @@ npm run test       # vitest; TEST_SUPABASE_* enables the live-DB isolation suite
 npm run build
 ```
 
-## The non-negotiables
+## Boundaries before real case use
 
-1. **Never generate facts or opinions** — only structure the expert's own inputs. One hallucination in court ends the business.
-2. **The AI-disclosure/audit layer is the moat** — it ships in everything, never gets bypassed.
-3. **Honest copy, always** — "structures" not "drafts opinions"; "tamper-evident" never "tamper-proof"; admissibility is the court's call.
-4. **No training on customer data; confidentiality is a selling point** — case files are often under protective order.
-5. **Validation over features** — the open risks are customers, a design partner, and legal review, not code. See `docs/honest-audit.md`.
+1. The tool is designed to organize expert-supplied material. Its citation-ID gate cannot verify the meaning, accuracy, completeness, or admissibility of a report; a qualified expert must review the final text against the underlying sources.
+2. The disclosure log records specified application events and detects changes within its checked chain. It does not certify a case record as complete or tamper-proof.
+3. Real case material may be confidential or subject to a protective order. Verify authorization, provider data handling, deployment configuration, and legal obligations before using it. The keyless worked example is the safer way to evaluate the interface.
+4. Customer validation and legal review remain open. See `docs/honest-audit.md` for the project's dated self-assessment.
 
 ## Repo layout
 
 ```
 forensic-report-tool/
-├── CLAUDE.md                  ← working agreement + the one invariant
+├── CLAUDE.md                  ← working agreement and project instructions
 ├── DEPLOY.md / RELEASE.md / DEFERRED.md / SECURITY.md
 ├── docs/                      ← SETUP-checklist, honest-audit, design-partner kit, VOICE, specs
 ├── discovery/                 ← interview guide, outreach sourcing, contacts
-├── supabase/migrations/       ← 0001–0008 (schema, RLS, billing, credits, idempotency, indexes)
-├── src/lib/domain/            ← the moat: grounding, audit, disclosure, reconstruction, rule26, readiness
+├── supabase/migrations/       ← schema, RLS, billing, credits, idempotency, and indexes
+├── src/lib/domain/            ← citation checks, audit, disclosure, reconstruction, rule26, readiness
 ├── src/lib/{draft,report,billing,security,http,log,supabase}/
 ├── src/app/workspace/         ← the report builder (the product)
 ├── src/app/api/               ← build/export/save + billing + intake routes
-└── src/test/                  ← ~32 suites; grounding/audit/disclosure suites are non-negotiable
+└── src/test/                  ← automated tests for domain and application behavior
 ```
