@@ -24,8 +24,8 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Persist the expert's report to THEIR account. Each save writes an immutable
-// snapshot: a new report row + its own append-only audit chain (the chain is
+// Persist the expert's report to THEIR account. Each save creates a new report
+// row + its own append-only audit chain (the chain is
 // per-report, so re-saving never mutates a prior disclosure record). All writes
 // go through the RLS-scoped user client, so Postgres — not this code — enforces
 // that an expert can only ever write under their own owner_id.

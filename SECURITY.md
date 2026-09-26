@@ -12,8 +12,9 @@ Please email **security@disclosed.app** with:
 - any affected URLs or components.
 
 Please do **not** open a public issue for security reports, and please do not
-access, modify, or exfiltrate data that isn't yours while testing. We aim to
-acknowledge reports within a few business days.
+access, modify, or exfiltrate data that isn't yours while testing. The repository
+does not establish a response-time commitment; if delivery fails, contact the
+repository owner privately before sharing sensitive details elsewhere.
 
 ## Scope
 
@@ -27,10 +28,16 @@ Vercel) — report those to the respective vendors.
 
 We describe our posture honestly and avoid claiming certifications we do not hold:
 - **No SOC 2 / ISO certification yet.** We do not claim one.
-- **Confidentiality:** drafting uses the Anthropic API (no training on inputs by
-  default); per-account isolation is enforced by Postgres row-level security.
-- **Transport/storage:** HTTPS in transit; data at rest is encrypted by the
-  managed database provider.
+- **AI data path:** when AI drafting is enabled, selected case material is sent
+  to the Anthropic API. Provider retention and account-specific terms need
+  verification before real case use; the early-access path is limited to
+  fictional or de-identified material.
+- **Account isolation:** the repository defines per-owner Postgres row-level
+  security policies. The live database configuration and cross-user isolation
+  have not been verified by the automated suite without test credentials.
+- **Transport/storage:** the app is designed for HTTPS and managed database
+  encryption. This repository alone does not verify the live deployment or
+  provider configuration.
 - **AI grounding:** the export pipeline blocks uncited sentences and citations
   with IDs outside the supplied evidence set. It does not determine whether an
   allowed source actually supports a claim; the expert must review that.
@@ -39,7 +46,8 @@ If a claim here ever drifts from reality, that itself is a bug — please report
 
 ## Verifying a disclosure record (independently)
 
-Every report's AI-use record is an append-only SHA-256 hash chain. Anyone holding
+The app records AI-use events in a SHA-256 hash chain and restricts ordinary
+account writes to insert/read in the supplied database policies. Anyone holding
 a report's disclosure manifest can verify it **independently** — in their own
 browser, with no account and nothing uploaded — at `/verify`. The exact algorithm
 and a reference implementation are published in `docs/VERIFICATION.md`, so the
